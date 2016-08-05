@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="GUI,Python," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,34 +84,25 @@
 
 
 
-<meta name="description" content="之前一直在用音速启动，就是一个快速打开文件夹和文件的软件
-然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。
-然后觉得名字起的不够霸气，遂把自己写的命名为光速启动
-#我逗比的一面又显现出来了
-#另：考完试终于可以愉快的写代码了
-#还有就是各位大神如果觉得我的写法(实现)naive，非常欢迎在下面吐槽，我非常期待您们的意见
-于是就开始干：">
+<meta name="description" content="今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。
+虚函数C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是
+
+Java中除了static和final方法(private方法属于f">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PyQt实现类似音速启动的GUI程序">
-<meta property="og:url" content="http://yoursite.com/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/index.html">
+<meta property="og:title" content="Cpp有接口?">
+<meta property="og:url" content="http://yoursite.com/2016/08/05/Cpp有接口/index.html">
 <meta property="og:site_name" content="e^(iπ) + 1 = 0">
-<meta property="og:description" content="之前一直在用音速启动，就是一个快速打开文件夹和文件的软件
-然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。
-然后觉得名字起的不够霸气，遂把自己写的命名为光速启动
-#我逗比的一面又显现出来了
-#另：考完试终于可以愉快的写代码了
-#还有就是各位大神如果觉得我的写法(实现)naive，非常欢迎在下面吐槽，我非常期待您们的意见
-于是就开始干：">
-<meta property="og:updated_time" content="2016-08-04T08:50:16.291Z">
+<meta property="og:description" content="今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。
+虚函数C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是
+
+Java中除了static和final方法(private方法属于f">
+<meta property="og:updated_time" content="2016-08-05T07:43:03.099Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PyQt实现类似音速启动的GUI程序">
-<meta name="twitter:description" content="之前一直在用音速启动，就是一个快速打开文件夹和文件的软件
-然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。
-然后觉得名字起的不够霸气，遂把自己写的命名为光速启动
-#我逗比的一面又显现出来了
-#另：考完试终于可以愉快的写代码了
-#还有就是各位大神如果觉得我的写法(实现)naive，非常欢迎在下面吐槽，我非常期待您们的意见
-于是就开始干：">
+<meta name="twitter:title" content="Cpp有接口?">
+<meta name="twitter:description" content="今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。
+虚函数C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是
+
+Java中除了static和final方法(private方法属于f">
 
 
 
@@ -132,9 +123,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/05/Cpp有接口/"/>
 
-  <title> PyQt实现类似音速启动的GUI程序 | e^(iπ) + 1 = 0 </title>
+  <title> Cpp有接口? | e^(iπ) + 1 = 0 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -254,7 +245,7 @@
             
             
               
-                PyQt实现类似音速启动的GUI程序
+                Cpp有接口?
               
             
           </h1>
@@ -266,8 +257,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-01-22T21:44:35+08:00" content="2016-01-22">
-              2016-01-22
+            <time itemprop="dateCreated" datetime="2016-08-05T09:45:44+08:00" content="2016-08-05">
+              2016-08-05
             </time>
           </span>
 
@@ -280,8 +271,8 @@
               <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CS/" itemprop="url" rel="index">
-                    <span itemprop="name">CS</span>
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
                   </a>
                 </span>
 
@@ -292,8 +283,8 @@
 
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CS/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/C/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -308,8 +299,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/" itemprop="commentsCount"></span>
+                <a href="/2016/08/05/Cpp有接口/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/Cpp有接口/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -332,41 +323,63 @@
       
 
       
-        <p>之前一直在用音速启动，就是一个快速打开文件夹和文件的软件</p>
-<p>然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。</p>
-<p>然后觉得名字起的不够霸气，遂把自己写的命名为光速启动</p>
-<p><em>#我逗比的一面又显现出来了</em></p>
-<p><em>#另：考完试终于可以愉快的写代码了</em></p>
-<p><em>#还有就是各位大神如果觉得我的写法(实现)naive，非常欢迎在下面吐槽，我非常期待您们的意见</em></p>
-<p>于是就开始干：</p>
-<p>主类mainWin</p>
-<p>打算实现的功能：<br>1.添加文件和文件夹，按钮形式，可拖放添加，也可删除，也可右键菜单添加<br>2.关闭时退至托盘，右键选择显示窗口或退出<br>3.实现靠屏幕右侧悬停</p>
-<p>1.<br>添加文件和文件夹，我最基本的是右键弹出菜单，用contextMenu来实现</p>
-<p>把ContextMenuPolicy的值设置为Qt.CustomContextMenu，响应customContextMenuRequested()这个signal，在响应的槽中把菜单显示出来。</p>
-<p>添加的都保存在一个文件，以便下次启动也可以显示这次的改动，启动时候把所有的按钮存在list里，方便打开时找到sender、删除时重新布局等等</p>
-<p>删除使用对话框，用ComboBox选择删除的项目，再把其删除</p>
-<p>删除倒是一件麻烦的事，一开始查了class reference，用removeWidget发现不得要领，后来在<a href="http://www.qtcn.org/bbs/simple/?t15751.html" target="_blank" rel="external">关于layout里删除Widget的问题</a>中发现一个方法，先setParent(None)，再removeWidget。再回头看看觉得也对，removeWidget使用后布局是我的锅，因为它还属于原来的QWidget。下面摘抄自class reference：</p>
+        <p>今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。</p>
+<h2 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h2><p>C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是</p>
 <blockquote>
-<p>QLayout.removeWidget (self, QWidget w)</p>
-<p>Removes the widget widget from the layout. After this call, it is the caller’s responsibility to give the widget a reasonable geometry or to put the widget back into a layout.</p>
-<p>&nbsp;</p>
-<p>Note: The ownership of widget remains the same as when it was added.<br>如果我先把它变成孤儿(setParent(None))，就不用处理了。成功删掉后再把保存数据的文件改一下，重新布局就解决删除这个问题。</p>
+<p>Java中除了static和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。</p>
+<p>摘自《Java编程思想》第四版Page151</p>
 </blockquote>
-<p>后来发现QPushButton这样直接搞太丑了，就决定加一波图片，对应各种文件格式，文件夹对应文件夹。然后一查发现还可以用QSS(好多CSS都能用，选择器、伪类)也是醉了。。。直接background-image:url(url)搞定。</p>
-<p>其实我想直接获得系统默认图标的，但是也查不到怎么搞，所以知道的大牛能不能给我说一下，谢谢啦</p>
-<p>所以我就去网上找了一组图标用。。。还特别丑。。。</p>
-<p>关于对话框和删除对话框都是用QDialog直接搞出来，比较简单</p>
-<p>拖放的话直接重写dragEnterEvent和dropEvent，对于文件就用mimeData().hasUrls()判断是不是合法url列表，如果是再使用mimeData().urls()访问url列表<br>剩下就简单了，和添加是一样的。还要注意setAcceptDrops(True)和在拖动合法url列表时使用acceptProposedAction()，以表明只接受文件的拖动</p>
-<p>打开的话，呃，直接使用os.startfile()</p>
-<p>2.<br>关闭时不关闭退至托盘，考虑重写closeEvent，再event.ignore()，再把托盘图标设为可见，托盘图标用QSystemTrayIcon()实现，可以把菜单加到QSystemTrayIcon().trayIconMenu上</p>
-<p>3.<br>悬停的话用的是重写enterevent，leaveEvent</p>
-<p>在窗口的右边界坐标，即self.x() + self.frameGeometry().width()超过屏幕右边界坐标时，把窗口右边界移动到屏幕右边界附近，离开时再把窗口移到右边探出一小点，以便鼠标得以再次进入</p>
-<p>不过坑爹之处在于QWidget是由两部分组成，title bar和frame。enterevent，leaveEvent是在frame内部才算enter，出去(包括把鼠标移到title上)都属于leave。这样的话一旦悬停就很难移动窗口，所以我就用mousePressEvent和mouseMoveEvent加了左键点击frame拖动也可以移动窗口，这样就比较方便。所以先要event.buttons == PyQt4.Qt.Qt.LeftButton确认左键，再移动</p>
-<a id="more"></a>
-<p>用的网格布局，窗口太长时候上下两行间距过大，暂时不知道怎么调整。。。比较丑。。。</p>
-<p>代码已经放到同性交友网站上了，传送门：<a href="https://github.com/eipi10ydz/gsqd" target="_blank" rel="external">https://github.com/eipi10ydz/gsqd</a>，欢迎去看看</p>
-<p>而且还没有做打包exe，现在就用bat生成快捷方式放在桌面打开，用快捷方式可以改图标，看起来还可以接受</p>
-<p>就这样吧，注册这么久第一次发博文，记录一下写的大概思路，方便以后查阅。</p>
+<h2 id="Java中的abstract关键字"><a href="#Java中的abstract关键字" class="headerlink" title="Java中的abstract关键字"></a>Java中的abstract关键字</h2><p>在Java中，如果方法加上abstract关键字，就是一个抽象方法，抽象方法仅有声明而没有方法体。</p>
+<p><code>abstract void f();</code></p>
+<p>这里的抽象方法与Cpp的纯虚函数应该类似。</p>
+<p><code>virtual void f() = 0;</code></p>
+<blockquote>
+<p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须限定为抽象的。(否则编译器就会报错)</p>
+<p>摘自《Java编程思想》第四版Page169</p>
+</blockquote>
+<p>这里应该和Cpp里面的抽象基类是<strong>差不多</strong>的，如果继承抽象基类(或抽象类)的派生类不给出<strong>所有的</strong>纯虚函数(或抽象方法)的定义，就无法实例化，因为该派生类仍然是抽象基类(抽象类)。</p>
+<p>之所以上面说差不多，是因为我发现了个好玩的现象，即抽象类可以强行加上abstract关键字定义而不需要一定有抽象方法。即只要一个Java类加上了abstract关键字，它就是一定是一个抽象类。而Cpp并没有与abstract类似的关键字。</p>
+<pre>
+Test.java
+
+public class Test
+{
+    public static void main(String[] args) 
+    {
+        System.out.println("test");
+        T t = new T();
+//      S s = new S();
+/*
+Test.java:7: 错误: S是抽象的; 无法实例化
+           S s = new S();
+                 ^
+1 个错误
+*/
+        t.f();
+        t.g();
+    }
+}
+
+abstract class S
+{
+    void f()
+    {
+        System.out.println("S");
+    }
+}
+
+class T extends S
+{
+    void g()
+    {
+        System.out.println("T");        
+    }
+}
+</pre>
+
+<p>结果输出:</p>
+<p><pre><br>test<br>S<br>T<br></pre></p>
+<h2 id="Java中的接口interface"><a href="#Java中的接口interface" class="headerlink" title="Java中的接口interface"></a>Java中的接口interface</h2><p>Java里面的接口，方法全部是抽象方法，变量全部是public static final，对应Cpp的接口，说的应该是只有纯虚函数的抽象基类，然而又有所不同，毕竟即使抽象基类里只有纯虚函数，也不需要全是public的，变量也不需要全是public static的(Cpp变量不能用final)。</p>
 
       
     </div>
@@ -387,26 +400,18 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/GUI/" rel="tag">#GUI</a>
-          
-            <a href="/tags/Python/" rel="tag">#Python</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/01/27/e5-9c-a8android-e6-89-8b-e6-9c-ba-e4-b8-8a-e9-85-8d-e7-bd-aegccgpython3/" rel="next" title="在Android手机上配置gcc,g++,python3">
+                <i class="fa fa-chevron-left"></i> 在Android手机上配置gcc,g++,python3
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/01/27/e5-9c-a8android-e6-89-8b-e6-9c-ba-e4-b8-8a-e9-85-8d-e7-bd-aegccgpython3/" rel="prev" title="在Android手机上配置gcc,g++,python3">
-                在Android手机上配置gcc,g++,python3 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -421,10 +426,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/"
-     data-title="PyQt实现类似音速启动的GUI程序"
+        <div class="ds-share flat" data-thread-key="2016/08/05/Cpp有接口/"
+     data-title="Cpp有接口?"
      data-content=""
-     data-url="http://yoursite.com/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/">
+     data-url="http://yoursite.com/2016/08/05/Cpp有接口/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -451,8 +456,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/"
-           data-title="PyQt实现类似音速启动的GUI程序" data-url="http://yoursite.com/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/">
+      <div class="ds-thread" data-thread-key="2016/08/05/Cpp有接口/"
+           data-title="Cpp有接口?" data-url="http://yoursite.com/2016/08/05/Cpp有接口/">
       </div>
     
   </div>
@@ -554,7 +559,7 @@
               
             
             
-              <p class="post-toc-empty">This post does not have a Table of Contents</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#虚函数"><span class="nav-number">1.</span> <span class="nav-text">虚函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的abstract关键字"><span class="nav-number">2.</span> <span class="nav-text">Java中的abstract关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的接口interface"><span class="nav-number">3.</span> <span class="nav-text">Java中的接口interface</span></a></li></ol></div>
             
           </div>
         </section>

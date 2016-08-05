@@ -235,6 +235,194 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/05/Cpp有接口/" itemprop="url">
+                  Cpp有接口?
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-08-05T09:45:44+08:00" content="2016-08-05">
+              2016-08-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/C/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/05/Cpp有接口/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/Cpp有接口/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。</p>
+<h2 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h2><p>C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是</p>
+<blockquote>
+<p>Java中除了static和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。</p>
+<p>摘自《Java编程思想》第四版Page151</p>
+</blockquote>
+<h2 id="Java中的abstract关键字"><a href="#Java中的abstract关键字" class="headerlink" title="Java中的abstract关键字"></a>Java中的abstract关键字</h2><p>在Java中，如果方法加上abstract关键字，就是一个抽象方法，抽象方法仅有声明而没有方法体。</p>
+<p><code>abstract void f();</code></p>
+<p>这里的抽象方法与Cpp的纯虚函数应该类似。</p>
+<p><code>virtual void f() = 0;</code></p>
+<blockquote>
+<p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须限定为抽象的。(否则编译器就会报错)</p>
+<p>摘自《Java编程思想》第四版Page169</p>
+</blockquote>
+<p>这里应该和Cpp里面的抽象基类是<strong>差不多</strong>的，如果继承抽象基类(或抽象类)的派生类不给出<strong>所有的</strong>纯虚函数(或抽象方法)的定义，就无法实例化，因为该派生类仍然是抽象基类(抽象类)。</p>
+<p>之所以上面说差不多，是因为我发现了个好玩的现象，即抽象类可以强行加上abstract关键字定义而不需要一定有抽象方法。即只要一个Java类加上了abstract关键字，它就是一定是一个抽象类。而Cpp并没有与abstract类似的关键字。</p>
+<pre>
+Test.java
+
+public class Test
+{
+    public static void main(String[] args) 
+    {
+        System.out.println("test");
+        T t = new T();
+//      S s = new S();
+/*
+Test.java:7: 错误: S是抽象的; 无法实例化
+           S s = new S();
+                 ^
+1 个错误
+*/
+        t.f();
+        t.g();
+    }
+}
+
+abstract class S
+{
+    void f()
+    {
+        System.out.println("S");
+    }
+}
+
+class T extends S
+{
+    void g()
+    {
+        System.out.println("T");        
+    }
+}
+</pre>
+
+<p>结果输出:</p>
+<p><pre><br>test<br>S<br>T<br></pre></p>
+<h2 id="Java中的接口interface"><a href="#Java中的接口interface" class="headerlink" title="Java中的接口interface"></a>Java中的接口interface</h2><p>Java里面的接口，方法全部是抽象方法，变量全部是public static final，对应Cpp的接口，说的应该是只有纯虚函数的抽象基类，然而又有所不同，毕竟即使抽象基类里只有纯虚函数，也不需要全是public的，变量也不需要全是public static的(Cpp变量不能用final)。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/27/e5-9c-a8android-e6-89-8b-e6-9c-ba-e4-b8-8a-e9-85-8d-e7-bd-aegccgpython3/" itemprop="url">
                   在Android手机上配置gcc,g++,python3
                 </a>
@@ -568,7 +756,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -576,7 +764,7 @@
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">categories</span>
               
             </div>
