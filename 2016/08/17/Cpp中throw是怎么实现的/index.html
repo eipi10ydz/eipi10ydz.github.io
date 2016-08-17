@@ -84,43 +84,16 @@
 
 
 
-<meta name="description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。
-
-#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;vector&amp;gt;
-
-using namespace std;
-
-struct t
-{
-    int i = 0;">
+<meta name="description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cpp中throw是怎么实现的?">
 <meta property="og:url" content="http://yoursite.com/2016/08/17/Cpp中throw是怎么实现的/index.html">
 <meta property="og:site_name" content="e^(iπ) + 1 = 0">
-<meta property="og:description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。
-
-#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;vector&amp;gt;
-
-using namespace std;
-
-struct t
-{
-    int i = 0;">
-<meta property="og:updated_time" content="2016-08-17T12:05:00.014Z">
+<meta property="og:description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。">
+<meta property="og:updated_time" content="2016-08-17T12:19:37.428Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cpp中throw是怎么实现的?">
-<meta name="twitter:description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。
-
-#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;vector&amp;gt;
-
-using namespace std;
-
-struct t
-{
-    int i = 0;">
+<meta name="twitter:description" content="看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。">
 
 
 
@@ -201,7 +174,7 @@ struct t
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -211,7 +184,7 @@ struct t
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -221,7 +194,7 @@ struct t
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -274,7 +247,7 @@ struct t
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-08-17T18:34:08+08:00" content="2016-08-17">
               2016-08-17
             </time>
@@ -286,7 +259,7 @@ struct t
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/C/" itemprop="url" rel="index">
@@ -330,6 +303,7 @@ struct t
 
       
         <p>看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。</p>
+<a id="more"></a>
 <pre>
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
@@ -541,10 +515,10 @@ t
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -561,26 +535,19 @@ t
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">5</span>
-              <span class="site-state-item-name">Artikel</span>
+              <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">Kategorien</span>
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
               
             </div>
           
 
-          
-            <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">Tags</span>
-              
-            </div>
           
 
         </nav>
@@ -644,7 +611,7 @@ t
 </div>
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">

@@ -172,7 +172,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -182,7 +182,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -192,7 +192,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -248,7 +248,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-08-17T18:34:08+08:00" content="2016-08-17">
               2016-08-17
             </time>
@@ -260,7 +260,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/C/" itemprop="url" rel="index">
@@ -304,118 +304,12 @@
 
       
         
-          
-            <p>看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。</p>
-<pre>
-#include &lt;iostream&gt;
-#include &lt;vector&gt;
-
-using namespace std;
-
-struct t
-{
-    int i = 0;
-    virtual void f(){cout << "t" << endl;}
-};
-
-struct s : t
-{
-    void f() override {cout << "s" << endl;}
-};
-
-int main()
-{
-    s ii = s();
-    try
-    {
-        cout << &ii << endl;
-        throw ii;
-    }
-    catch(s &iii)
-    {
-        cout << &iii << endl;
-        try
-        {
-            throw;
-        }
-        catch(s &iiii)
-        {
-            cout << &iiii << endl;
-        }
-    }
-}
-
-输出:
-0x7ffff7a96e10
-0xc24ca0
-0xc24ca0
-</pre>
-
-<p>结果发现后两个倒是一样，那前面的第一个呢？说好的左值引用呢？于是就测了下虚函数起没起作用。</p>
-<pre>
-#include &lt;iostream&gt;
-#include &lt;vector&gt;
-
-using namespace std;
-
-struct t
-{
-    int i = 0;
-    virtual void f(){cout << "t" << endl;}
-};
-
-struct s : t
-{
-    void f() override {cout << "s" << endl;}
-};
-
-int main()
-{
-    s ii = s();
-    try
-    {
-        cout << &ii << endl;
-        throw ii;
-    }
-    catch(t &iii)
-    {
-        iii.f();
-        cout << &iii << endl;
-        try
-        {
-            throw;
-        }
-        catch(t iiii)
-        {
-            iiii.f();
-            cout << &iiii << endl;
-        }
-    }
-}
-
-输出:
-0x7fffcaddb9a0
-s
-0x826ca0
-t
-0x7fffcaddb990
-</pre>
-
-<p>这么看来虚函数还是起到它的作用了的。但是为什么地址不相等呢？于是就查了下，发现知乎上有人回答，虽然问的是为什么不能是右值引用，但提到了C++标准，于是又去找标准。在ISO/IEC JTC1 SC22 WG21 N3690的Page388页可以发现下面这段话。</p>
-<blockquote>
-<p>3 Throwing an exception <strong>copy-initializes (8.5, 12.8) a temporary object</strong>, called the exception object. The temporary is an lvalue and is used to initialize the variable named in the matching handler (15.3).</p>
-</blockquote>
-<p>也就是说其实在throw的时候，Cpp先拷贝初始化了一个临时对象，再把这临时对象传给异常声明里面的参数。那么显然是不会和原来那个对象地址相同的。</p>
-<blockquote>
-<p>4 The memory for the exception object is allocated in an unspeciﬁed way, except as noted in 3.7.4.1. If a handler exits by rethrowing, control is passed to another handler for the same exception. </p>
-</blockquote>
-<p>然后如果再rethrow，抛出的还是原来那个的临时对象，因为此处说的只是把控制权转给了下一个handler。这就可以解释为什么最上面那程序后两个地址是一样的。同时也可以解释为什么不能是右值引用了。讲道理，如果是右值引用，你throw之后这个异常对象(临时对象)被移动给了catch里的参数，就已经是一个废<del><em>呆呆兽</em></del>对象了，处于可以析构的状态，你还怎么确保使用它的安全性?就别提rethrow它了。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="https://www.zhihu.com/question/36050242" title="为什么catch的declaration 不能使用 rvalue reference？" target="_blank" rel="external">为什么catch的declaration 不能使用 rvalue reference？</a></li>
-<li><a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2013/n3690.pdf" title="ISO/IEC JTC1 SC22 WG21 N3690" target="_blank" rel="external">ISO/IEC JTC1 SC22 WG21 N3690</a></li>
-</ol>
-
-          
+          <p>看Cpp Primer第五版，里面提到说catch子句的异常声明也可以采用左值引用。一开始我看得不够仔细，一下就想着，和函数参数列表应该差不多，修改后再次抛出该对象就还是原来的，改变也会被记录。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/17/Cpp中throw是怎么实现的/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -476,7 +370,7 @@ t
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-08-17T00:30:37+08:00" content="2016-08-17">
               2016-08-17
             </time>
@@ -488,7 +382,7 @@ t
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/C/" itemprop="url" rel="index">
@@ -498,7 +392,7 @@ t
 
                 
                 
-                  . 
+                  , 
                 
 
               
@@ -544,204 +438,12 @@ t
 
       
         
-          
-            <p>众所周知，换行符在Linux与Win下不同，在Linux下是’\n’，在Win下是’\r\n’。这就是我在文件读写时遇到奇怪的问题的起因。</p>
-<h2 id="std-getline"><a href="#std-getline" class="headerlink" title="std::getline"></a>std::getline</h2><p>首先我在Win下新建一个文件test.txt，只有一个空格(注意不是用vim，原因等下解释)。</p>
-<pre>
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in);
-    string s;
-    getline(f, s);
-    cout << s.size() << endl;
-}
-
-输出:1
-</pre>
-
-<p>这时候我把test.txt改一下，再换一行，变为一个空格加一行，代码不变。</p>
-<pre>
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in);
-    string s;
-    getline(f, s);
-    cout << s.size() << endl;
-}
-
-输出:2
-</pre>
-
-<p>这时候你可能会觉得奇怪，欸难道换行符也被读进来了？于是查了下zeal里面的C++文档。</p>
-<blockquote>
-<p>getline reads characters from an input stream and places them into a string:</p>
-<ol>
-<li><p>Behaves as UnformattedInputFunction, except that input.gcount() is not affected. After constructing and checking the sentry object, performs the following:</p>
-<ol>
-<li><p>Calls str.erase()</p>
-</li>
-<li><p>Extracts characters from input and appends them to str until one of the following occurs (checked in the order listed)</p>
-<ol>
-<li><p>end-of-file condition on input, in which case, getline sets eofbit.</p>
-</li>
-<li><p>the next available input character is delim, as tested by Traits::eq(c, delim), in which case the delimiter character is extracted from input, but <strong>is not appended to str</strong>.</p>
-</li>
-<li>str.max_size() characters have been stored, in which case getline sets failbit and returns.</li>
-</ol>
-</li>
-<li>If no characters were extracted for whatever reason (not even the discarded delimiter), getline sets failbit and returns.</li>
-</ol>
-</li>
-<li>Same as getline(input, str, input.widen(‘\n’)), that is, the default delimiter is the endline character.</li>
-</ol>
-</blockquote>
-<p>可以看到黑体部分，换行符是不会加到尾部的。但是多出来的那一个字符是什么鬼？其实问题就出在我是用bash for win里面的gcc。可以看到，getline是以’\n’作为默认结尾的，因此它getline取的是’ \r’，即一个空格加一个回退符，所以长度为2。因为好奇，我又用dec-cpp内置的MingW gcc进行编译，发现结果还是1。看来MingW确实是对着win的，是处理过的，把’\r\n’作为换行符。</p>
-<p>做一个简单测试来证明这一点，先是bash for win</p>
-<pre>
-bash for win; x86_64-pc-linux-gnu; gcc version 6.1.0
-
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in);
-    string s;
-    getline(f, s);
-    cout << "nihaoa" << s[s.size() - 1] << "hehe" << endl;
-}
-
-输出:heheoa
-</pre>
-
-<p>然后是MingW gcc</p>
-<pre>
-x86_64-w64-mingw32; gcc version 4.8.1
-
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in);
-    string s;
-    getline(f, s);
-    cout << "nihaoa" << s[s.size() - 1] << "hehe" << endl;
-}
-
-输出:nihaoa hehe 
-</pre>
-
-<h2 id="文件随机访问"><a href="#文件随机访问" class="headerlink" title="文件随机访问"></a>文件随机访问</h2><p>但是这还没完，还有随机读写呢。fstream和sstream都是支持随机访问的。因此就有seekg(seekp), tellg(tellp)等函数。测试发现用seekg(xxx, fstream::end)会发现同样奇怪的现象，以致于一开始我没搞明白上面的所发生的事情时候一度认为该函数实现有问题<del>(其实是我自己太菜)</del>。于是乎发现seekg(0, fstream::end)都是指向文件的字符串位置的”尾后迭代器”(算是吧)。然后文件内容是一个空格加一个换行符，我又写了个程序来玩。</p>
-<p>先是bash for win</p>
-<pre>
-bash for win; x86_64-pc-linux-gnu; gcc version 6.1.0
-
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in | fstream::ate);
-    auto end = f.tellg();
-    f.seekg(-3, fstream::end);
-    cout << boolalpha;
-    cout << f.peek() << endl;
-    cout << (f.peek() == ' ') << endl;
-    f.seekg(-2, fstream::end);
-    cout << f.peek() << endl;
-    cout << (f.peek() == '\r') << endl;
-    f.seekg(-1, fstream::end);
-    cout << f.peek() << endl;
-    cout << (f.get() == '\n') << endl;
-    cout << (f.tellg() == end) << noboolalpha << endl;
-}
-
-输出:
-32
-true
-13
-true
-10
-true
-true
-</pre>
-
-<p>然后是MingW gcc</p>
-<pre>
-x86_64-w64-mingw32; gcc version 4.8.1
-
-#include &lt;iostream&gt;
-#include &lt;fstream&gt;
-
-using namespace std;
-
-int main () 
-{
-    fstream f("test.txt", fstream::in | fstream::ate);
-    auto end = f.tellg();
-    f.seekg(-3, fstream::end);
-    cout << boolalpha;
-    cout << f.peek() << endl;
-    cout << (f.peek() == ' ') << endl;
-    f.seekg(-2, fstream::end);
-    cout << f.peek() << endl;
-    cout << (f.peek() == '\r') << endl;
-    f.seekg(-1, fstream::end);
-    cout << f.peek() << endl;
-    cout << (f.get() == '\n') << endl;
-    cout << (f.tellg() == end) << noboolalpha << endl;
-}
-
-输出:
-32
-true
-10
-false
-10
-true
-true
-</pre>
-
-<p>这个问题十分诡异。MingW gcc竟然强行变成了两个’\n’，而非’\r\n’。暂时没有找到到底是什么原因。但是可以清楚看到的是，这时候在判断换行符时候就不能像前面getline一样以为是只有一位了。所以在对文件进行随机读写的时候，一定要考虑最后是换行符的情况。在判断结尾的时候尽量避免先用seek跳到结尾字符然后再一个一个get来判断的方式，如果一定要这么做，可以考虑用一下peek, unget, putback这些可以吃后悔药的方法来检测一下，下一个字符到底是什么，避免直接用get()却又没考虑到所有情况，导致程序错误。</p>
-<ul>
-<li>文件由换行符结尾<ul>
-<li>Win : 倒数第三个才是最后一个字符</li>
-<li>Linux : 倒数第二个就是最后一个字符</li>
-</ul>
-</li>
-<li>文件不由换行符结尾 : 你可以庆幸了，两种系统都是一样的</li>
-</ul>
-<h2 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h2><p>之前提到说不要用vim来编辑那个text.txt，又是为什么呢？作为一款优秀的编辑器，它肯定要遵守Linux下的基本法。按照POSIX standard，有以下规定(此问题答案从SO发现)</p>
-<blockquote>
-<p>3.206 Line</p>
-<p>A sequence of zero or more non- <newline> characters plus a terminating <newline> character.</newline></newline></p>
-</blockquote>
-<p>所以这样搞之后，只要你的文件不是空<code>ls -hl | grep xxx | awk &#39;{print $5}&#39;</code>，你就一定会有一个换行符。但是你看啊，并不是每个人都读过基本法啊<del>(特别是像我这么菜的)</del>。因此vim作为Linux下一款优秀的编辑器，文件当然要按照Linux的基本法去产生。于是默认情形vim会在你保存的文件末尾再强行加一个换行符，以避免忘了加。所以需要加入<code>:set noendofline binary</code>(或者直接修改.vimrc)让其不在你的文件末尾偷偷加上换行符。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="http://stackoverflow.com/questions/729692/why-should-text-files-end-with-a-newline" title="Why should text files end with a newline?" target="_blank" rel="external">Why should text files end with a newline?</a></li>
-<li><a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_206" title="Definitions" target="_blank" rel="external">Definitions</a></li>
-<li><a href="http://en.cppreference.com/w/cpp/string/basic_string/getline" title="std::getline" target="_blank" rel="external">std::getline</a></li>
-<li><a href="http://blog.csdn.net/xxxxxx91116/article/details/8648447" title="让vim不在末尾添加0a，换行" target="_blank" rel="external">让vim不在末尾添加0a，换行</a></li>
-</ol>
-
-          
+          <p>众所周知，换行符在Linux与Win下不同，在Linux下是’\n’，在Win下是’\r\n’。这就是我在文件读写时遇到奇怪的问题的起因。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/17/换行符引发的血案/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -802,7 +504,7 @@ true
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-08-05T09:45:44+08:00" content="2016-08-05">
               2016-08-05
             </time>
@@ -814,7 +516,7 @@ true
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/C/" itemprop="url" rel="index">
@@ -824,7 +526,7 @@ true
 
                 
                 
-                  . 
+                  , 
                 
 
               
@@ -870,66 +572,12 @@ true
 
       
         
-          
-            <p>今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。</p>
-<h2 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h2><p>C++的虚函数需要加上virtual关键字，而只有虚函数才会有动态绑定，根据对象的动态类型来决定调用对应的虚函数。而Java貌似没有这概念，也即是</p>
-<blockquote>
-<p>Java中除了static和final方法(private方法属于final方法)之外，其他所有的方法都是后期绑定。</p>
-<p>摘自《Java编程思想》第四版Page151</p>
-</blockquote>
-<h2 id="Java中的abstract关键字"><a href="#Java中的abstract关键字" class="headerlink" title="Java中的abstract关键字"></a>Java中的abstract关键字</h2><p>在Java中，如果方法加上abstract关键字，就是一个抽象方法，抽象方法仅有声明而没有方法体。</p>
-<p><code>abstract void f();</code></p>
-<p>这里的抽象方法与Cpp的纯虚函数应该类似。</p>
-<p><code>virtual void f() = 0;</code></p>
-<blockquote>
-<p>包含抽象方法的类叫做抽象类，如果一个类包含一个或多个抽象方法，该类必须限定为抽象的。(否则编译器就会报错)</p>
-<p>摘自《Java编程思想》第四版Page169</p>
-</blockquote>
-<p>这里应该和Cpp里面的抽象基类是<strong>差不多</strong>的，如果继承抽象基类(或抽象类)的派生类不给出<strong>所有的</strong>纯虚函数(或抽象方法)的定义，就无法实例化，因为该派生类仍然是抽象基类(抽象类)。</p>
-<p>之所以上面说差不多，是因为我发现了个好玩的现象，即抽象类可以强行加上abstract关键字定义而不需要一定有抽象方法。即只要一个Java类加上了abstract关键字，它就是一定是一个抽象类。而Cpp并没有与abstract类似的关键字。</p>
-<pre>
-Test.java
-
-public class Test
-{
-    public static void main(String[] args) 
-    {
-        System.out.println("test");
-        T t = new T();
-//      S s = new S();
-/*
-Test.java:7: 错误: S是抽象的; 无法实例化
-           S s = new S();
-                 ^
-1 个错误
-*/
-        t.f();
-        t.g();
-    }
-}
-
-abstract class S
-{
-    void f()
-    {
-        System.out.println("S");
-    }
-}
-
-class T extends S
-{
-    void g()
-    {
-        System.out.println("T");        
-    }
-}
-</pre>
-
-<p>结果输出:</p>
-<p><pre><br>test<br>S<br>T<br></pre></p>
-<h2 id="Java中的接口interface"><a href="#Java中的接口interface" class="headerlink" title="Java中的接口interface"></a>Java中的接口interface</h2><p>Java里面的接口，方法全部是抽象方法，变量全部是public static final，对应Cpp的接口，说的应该是只有纯虚函数的抽象基类，然而又有所不同，毕竟即使抽象基类里只有纯虚函数，也不需要全是public的，变量也不需要全是public static的(Cpp变量不能用final)。</p>
-
-          
+          <p>今天看到有人说Cpp有接口，我感到很奇怪，因为从来没有听说过。而Java中恰好有interface。目测是把Java的东西拿过来用了。于是就决定查下资料，顺便复习下Java。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/05/Cpp有接口/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -990,7 +638,7 @@ class T extends S
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-01-27T17:22:46+08:00" content="2016-01-27">
               2016-01-27
             </time>
@@ -1002,11 +650,11 @@ class T extends S
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CS/" itemprop="url" rel="index">
-                    <span itemprop="name">CS</span>
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
                   </a>
                 </span>
 
@@ -1046,40 +694,13 @@ class T extends S
 
       
         
-          
-            <p><em>#我觉得自己真的是好无聊呀，明明有sl4a，qpython，c4droid，AIDE还要搞这些乱七八糟的东西。。。</em></p>
+          <p><em>#我觉得自己真的是好无聊呀，明明有sl4a，qpython，c4droid，AIDE还要搞这些乱七八糟的东西。。。</em></p>
 <p>既然搞了那就简要记录下，方便自己以后查阅。。。</p>
-<p>昨晚突然想把自己的手机root了，然后在机锋论坛找到帖子：<a href="http://bbs.gfan.com/android-7903689-1-1.html" target="_blank" rel="external">[联通版] 最新5.01的I9502ZNUJOC3固件包下载，附带ROOT工具，亲测OK。。。</a>，按照楼主所说的去做成功把自己手机root了。(用SuperSU管理权限)</p>
-<p>然后推荐下<a href="https://apkpure.com/" target="_blank" rel="external">https://apkpure.com/</a>，这个网站可以下载google play上的apk，很方便</p>
-<p>我下了<a href="https://apkpure.com/root-explorer/com.speedsoftware.rootexplorer" target="_blank" rel="external">root explorer</a>(管理文件)，<a href="https://apkpure.com/busybox/stericson.busybox" target="_blank" rel="external">busybox</a>(用于强化原来没几个命令的命令行)，<a href="https://apkpure.com/system-app-remover-root/com.jumobile.manager.systemapp" target="_blank" rel="external">The description of System app remover</a>(用于把联通内定的应用干掉)</p>
-<p>坑爹的是，我忘记把蓝牙键盘带回来了，用手机操作很蛋疼。。。</p>
-<p>然后竟然发现可以让手机变成ssh服务器，电脑直接ssh我的手机进行操作。</p>
-<p>下了<a href="https://apkpure.com/sshdroid/berserker.android.apps.sshdroid" target="_blank" rel="external">SSHDroid</a>，<a href="https://apkpure.com/quicksshd/com.teslacoilsw.quicksshd" target="_blank" rel="external">QuickSSHd</a>，不是一打开黑屏就是卡死。。。我指的我的手机，看评论其他人根本没那么多事。。。后来下了<a href="https://apkpure.com/ssh-server/com.icecoldapps.sshserver" target="_blank" rel="external">SSH Server</a>，发现真好用，设置一下后，我也懒得重启开linux，直接去下了个xshell，成功ssh到手机上</p>
-<p>接下来就选命令行的软件，换了几个，最终选了<a href="https://apkpure.com/terminal-ide/com.spartacusrex.spartacuside" target="_blank" rel="external">Terminal IDE</a>,</p>
-<blockquote>
-<p>GCC 4.4.0, make 3.82, ctags, javac, java, dx, proguard, aapt, apkbuilder, signer, ssh, sshd, telnetd, bash 4.2, busybox 1.19.2, vim 7.3, nano 2.2.6, midnight commander 4.8, htop 1.0, TMUX 1.5, links 2.7, rsync 3.0.8, git 1.7.8, BitchX 1.1 and a nice terminal emulator are all available.<br>也是吊。打开后点install system，再开命令行就会出现五颜六色的命令行，vim也能用，竟然还会自动补全，高亮，都配置好了，啧啧啧</p>
-</blockquote>
-<p>接下来就是gcc，g++，python的环境变量配置。</p>
-<p>gcc和g++的话，我参考了<a href="http://www.cnblogs.com/simpleyyt/archive/2012/11/24/GNU4Android.html" target="_blank" rel="external">强化你的Terminal IDE—在android平板/手机上编写C/C++</a>这篇文章，就是以下步骤：</p>
-<p>1.下载<a href="https://apkpure.com/gcc-plugin-for-c4droid-c-ide/com.n0n3m4.gcc4droid" target="_blank" rel="external">GCC plugin for C4droid C++ IDE APK</a>，把lib里面的gcc.zip解压</p>
-<p>2.把解压后gcc文件夹搬到/data/data/com.spartacusrex.spartacuside/files/system，讲道理的话是要先su root的，否则/data/data好像是permission denied</p>
-<p>3.打开/data/data/com.spartacusrex.spartacuside/files/.bashrc文件，注意如果在xshell中ssh到手机，就要用这个路径；如果是手机上用Terminal IDE打开，就是~/.bashrc，因为Terminal IDE的~/就是/data/data/com.spartacusrex.spartacuside/files。打开后加入以下三行：</p>
-<p><pre>export CPLUS_INCLUDE_PATH=$IDESYSTEM/gcc/arm-linux-androideabi/c++/include:$CPLUS_INCLUDE_PATH<br>export C_INCLUDE_PATH=$IDESYSTEM/gcc/arm-linux-androideabi/include:$C_INCLUDE_PATH<br>export PATH=$IDESYSTEM/gcc/bin:$PATH</pre><br>然后保存</p>
-<p>4.将gcc/bin下的文件改一下名，arm-linux-androideabi-gcc和arm-linux-androideabi-g++改为gcc和g++</p>
-<p>5.由于是在root下操作，所以要把gcc文件夹权限改成普通用户也可以访问，要不等下gcc的时候肯定permission denied，所以到/data/data/com.spartacusrex.spartacuside/files/system目录下</p>
-<p><pre>chmod -R 777 *</pre><br>6.然后重启Terminal IDE就可以啦</p>
-<p>截个图看看效果：(图中&lt;++是g++啦，它一行显示不了那么多，另外不要吐槽为什么是.c，因为一开始我是先测试gcc，再把文件内容改成C++的helloworld)</p>
-<p><a href="http://eipi10.blog.ustc.edu.cn/wp-content/uploads/2016/01/Screenshot_2016-01-27-16-52-22.png" target="_blank" rel="external"><img src="http://eipi10.blog.ustc.edu.cn/wp-content/uploads/2016/01/Screenshot_2016-01-27-16-52-22-169x300.png" alt="截图1"></a></p>
-<p>然后就是python啦</p>
-<p>总是有人这么蛋疼的。。我又找到另一个教程<a href="http://blog.csdn.net/magician333/article/details/39802227" target="_blank" rel="external">Python3 for terminal IDE 的实现</a>。。。</p>
-<p>先上<a href="https://code.google.com/archive/p/python-for-android/" target="_blank" rel="external">https://code.google.com/archive/p/python-for-android/</a>搞了<a href="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/python-for-android/Python3ForAndroid_r6.apk" target="_blank" rel="external">apk</a>下来，然后安装，打开后按第一项install，就会开始装了(最好先调出菜单check version，另外要注意此处安装需科学上网。。。)</p>
-<p>另外吐槽下，python-for-android在2013就不再更新的样子，不知是否和<a href="https://en.wikipedia.org/wiki/Guido_van_Rossum" target="_blank" rel="external">Guido van Rossum</a>在2012年离开google有关</p>
-<p>安好了之后照上面的第三步打开/data/data/com.spartacusrex.spartacuside/files/.bashrc，然后加入以下：</p>
-<p><pre>export EXTERNAL_STORAGE=/mnt/sdcard/com.googlecode.python3forandroid<br>export PY34A=/data/data/com.googlecode.python3forandroid/files/python3<br>export PY4A_EXTRAS=$EXTERNAL_STORAGE/extras<br>PYTHONPATH=$EXTERNAL_STORAGE/extras/python3<br>PYTHONPATH=${PYTHONPATH}:$PY34A/lib/python3.2/lib-dynload<br>export PYTHONPATH<br>export TEMP=$EXTERNAL_STORAGE/extras/python3/tmp<br>export PYTHON_EGG_CACHE=$TEMP<br>export PYTHONHOME=$PY34A<br>export LD_LIBRARY_PATH=$PY34A/lib<br>export PATH=$PYTHONHOME/bin:$PATH</pre><br>保存后重启Terminal IDE，就可以了。效果如下图：(图中的&lt;ython3 hello.py就是python3 hello.py啦，然后warning我也没找到具体的解决方案。。。hello.py里面就一条语句print(‘Hello’)啦，就是倒数第二行的效果)</p>
-<p><a href="http://eipi10.blog.ustc.edu.cn/wp-content/uploads/2016/01/Screenshot_2016-01-27-17-07-02.png" target="_blank" rel="external"><img src="http://eipi10.blog.ustc.edu.cn/wp-content/uploads/2016/01/Screenshot_2016-01-27-17-07-02-169x300.png" alt="截图2"></a></p>
-<p>然后就没了，记录一下，顺便吐槽下寒假在家里效率真是低。。。</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/27/e5-9c-a8android-e6-89-8b-e6-9c-ba-e4-b8-8a-e9-85-8d-e7-bd-aegccgpython3/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -1140,7 +761,7 @@ class T extends S
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <span class="post-meta-item-text">Posted on</span>
             <time itemprop="dateCreated" datetime="2016-01-22T21:44:35+08:00" content="2016-01-22">
               2016-01-22
             </time>
@@ -1152,23 +773,23 @@ class T extends S
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CS/" itemprop="url" rel="index">
-                    <span itemprop="name">CS</span>
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
                   </a>
                 </span>
 
                 
                 
-                  . 
+                  , 
                 
 
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CS/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/Python/GUI/" itemprop="url" rel="index">
+                    <span itemprop="name">GUI</span>
                   </a>
                 </span>
 
@@ -1210,37 +831,9 @@ class T extends S
         
           <p>之前一直在用音速启动，就是一个快速打开文件夹和文件的软件</p>
 <p>然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。</p>
-<p>然后觉得名字起的不够霸气，遂把自己写的命名为光速启动</p>
-<p><em>#我逗比的一面又显现出来了</em></p>
-<p><em>#另：考完试终于可以愉快的写代码了</em></p>
-<p><em>#还有就是各位大神如果觉得我的写法(实现)naive，非常欢迎在下面吐槽，我非常期待您们的意见</em></p>
-<p>于是就开始干：</p>
-<p>主类mainWin</p>
-<p>打算实现的功能：<br>1.添加文件和文件夹，按钮形式，可拖放添加，也可删除，也可右键菜单添加<br>2.关闭时退至托盘，右键选择显示窗口或退出<br>3.实现靠屏幕右侧悬停</p>
-<p>1.<br>添加文件和文件夹，我最基本的是右键弹出菜单，用contextMenu来实现</p>
-<p>把ContextMenuPolicy的值设置为Qt.CustomContextMenu，响应customContextMenuRequested()这个signal，在响应的槽中把菜单显示出来。</p>
-<p>添加的都保存在一个文件，以便下次启动也可以显示这次的改动，启动时候把所有的按钮存在list里，方便打开时找到sender、删除时重新布局等等</p>
-<p>删除使用对话框，用ComboBox选择删除的项目，再把其删除</p>
-<p>删除倒是一件麻烦的事，一开始查了class reference，用removeWidget发现不得要领，后来在<a href="http://www.qtcn.org/bbs/simple/?t15751.html">关于layout里删除Widget的问题</a>中发现一个方法，先setParent(None)，再removeWidget。再回头看看觉得也对，removeWidget使用后布局是我的锅，因为它还属于原来的QWidget。下面摘抄自class reference：</p>
-<blockquote>
-<p>QLayout.removeWidget (self, QWidget w)</p>
-<p>Removes the widget widget from the layout. After this call, it is the caller’s responsibility to give the widget a reasonable geometry or to put the widget back into a layout.</p>
-<p>&nbsp;</p>
-<p>Note: The ownership of widget remains the same as when it was added.<br>如果我先把它变成孤儿(setParent(None))，就不用处理了。成功删掉后再把保存数据的文件改一下，重新布局就解决删除这个问题。</p>
-</blockquote>
-<p>后来发现QPushButton这样直接搞太丑了，就决定加一波图片，对应各种文件格式，文件夹对应文件夹。然后一查发现还可以用QSS(好多CSS都能用，选择器、伪类)也是醉了。。。直接background-image:url(url)搞定。</p>
-<p>其实我想直接获得系统默认图标的，但是也查不到怎么搞，所以知道的大牛能不能给我说一下，谢谢啦</p>
-<p>所以我就去网上找了一组图标用。。。还特别丑。。。</p>
-<p>关于对话框和删除对话框都是用QDialog直接搞出来，比较简单</p>
-<p>拖放的话直接重写dragEnterEvent和dropEvent，对于文件就用mimeData().hasUrls()判断是不是合法url列表，如果是再使用mimeData().urls()访问url列表<br>剩下就简单了，和添加是一样的。还要注意setAcceptDrops(True)和在拖动合法url列表时使用acceptProposedAction()，以表明只接受文件的拖动</p>
-<p>打开的话，呃，直接使用os.startfile()</p>
-<p>2.<br>关闭时不关闭退至托盘，考虑重写closeEvent，再event.ignore()，再把托盘图标设为可见，托盘图标用QSystemTrayIcon()实现，可以把菜单加到QSystemTrayIcon().trayIconMenu上</p>
-<p>3.<br>悬停的话用的是重写enterevent，leaveEvent</p>
-<p>在窗口的右边界坐标，即self.x() + self.frameGeometry().width()超过屏幕右边界坐标时，把窗口右边界移动到屏幕右边界附近，离开时再把窗口移到右边探出一小点，以便鼠标得以再次进入</p>
-<p>不过坑爹之处在于QWidget是由两部分组成，title bar和frame。enterevent，leaveEvent是在frame内部才算enter，出去(包括把鼠标移到title上)都属于leave。这样的话一旦悬停就很难移动窗口，所以我就用mousePressEvent和mouseMoveEvent加了左键点击frame拖动也可以移动窗口，这样就比较方便。所以先要event.buttons == PyQt4.Qt.Qt.LeftButton确认左键，再移动</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/#more" rel="contents">
-              Weiterlesen &raquo;
+              Read more &raquo;
             </a>
           </div>
         
@@ -1311,26 +904,19 @@ class T extends S
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">5</span>
-              <span class="site-state-item-name">Artikel</span>
+              <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">Kategorien</span>
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
               
             </div>
           
 
-          
-            <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">Tags</span>
-              
-            </div>
           
 
         </nav>
@@ -1383,7 +969,7 @@ class T extends S
 </div>
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
