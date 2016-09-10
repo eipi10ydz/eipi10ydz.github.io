@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/09/07/一道题和STL的list/index.html">
 <meta property="og:site_name" content="e^(iπ) + 1 = 0">
 <meta property="og:description" content="算法课老师留了一道思考题，对长度为n的数组循环移位k。">
-<meta property="og:updated_time" content="2016-09-08T17:20:53.469Z">
+<meta property="og:updated_time" content="2016-09-10T15:43:41.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一道题和STL的list">
 <meta name="twitter:description" content="算法课老师留了一道思考题，对长度为n的数组循环移位k。">
@@ -325,7 +325,7 @@
 <p>然后我就想用模板，这样可以适用多种容器。由于一时忘了algorithm<br>里面有reverse，就自己写了个。</p>
 <pre>
 
-template<typename iterator="">
+template&lt;typename Iterator&gt;
 void reverse_impl(Iterator beg, Iterator end)
 {
     for(std::advance(end, -1); std::distance(beg, end) > 0; std::advance(beg, 1), std::advance(end, -1))
@@ -334,7 +334,7 @@ void reverse_impl(Iterator beg, Iterator end)
     }
 }
 
-template<typename t="">
+template&lt;typename T&gt;
 void my_reverse(int k, T &v)
 {
     k %= v.size();
@@ -346,7 +346,7 @@ void my_reverse(int k, T &v)
 }
 //std::list<int> il = {1, 2, 3, 4, 5, 6, 7, 8};
 //my_reverse(3, il);
-</int></typename></typename></pre>
+</int></pre>
 
 <p>前面用vector检查都没问题，结果list时候就结果不对。本来我用advance，distance就是为了针对list这种不支持随机访问的迭代器的。。。结果看起来只做了前两步，最后一步漏掉了。结果输出之后才发现其实是因为最后一步做了两次。我发现两个迭代器的差变化为7, 5, 3, 1, 8, 6, 4, 2, 0，并没有按我想象的在中间停下。查了下STL源码剖析，发现是因为list是双向链表，且为了满足STL“前闭后开”的区间要求，在list的“末尾”会有一个空白节点，这样5-8的差距比前面的1-4多1就有了解释。可见链表中元素被我交换了两次，相当于没有交换。同时如下所示，在取节点数据时候取的就是尾后迭代器的前一个节点的数据。</p>
 <pre>
