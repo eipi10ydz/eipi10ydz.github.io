@@ -1,0 +1,962 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="那天听源神说std::sort并不是简单的快排，而是什么内省排序，我感到很新奇，就研究了一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="std::sort是怎么实现的">
+<meta property="og:url" content="http://yoursite.com/2016/10/06/std-sort是怎么实现的/index.html">
+<meta property="og:site_name" content="e^(iπ) + 1 = 0">
+<meta property="og:description" content="那天听源神说std::sort并不是简单的快排，而是什么内省排序，我感到很新奇，就研究了一下。">
+<meta property="og:updated_time" content="2016-10-07T17:31:49.541Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="std::sort是怎么实现的">
+<meta name="twitter:description" content="那天听源神说std::sort并不是简单的快排，而是什么内省排序，我感到很新奇，就研究了一下。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/06/std-sort是怎么实现的/"/>
+
+  <title> std::sort是怎么实现的 | e^(iπ) + 1 = 0 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">e^(iπ) + 1 = 0</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                std::sort是怎么实现的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <time itemprop="dateCreated" datetime="2016-10-06T15:50:29+08:00" content="2016-10-06">
+              2016-10-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">in</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+                  . 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/C/STL/" itemprop="url" rel="index">
+                    <span itemprop="name">STL</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/06/std-sort是怎么实现的/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/std-sort是怎么实现的/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>那天听<a href="http://home.ustc.edu.cn/~zsy9509" title="suquark" target="_blank" rel="external">源神</a>说std::sort并不是简单的快排，而是什么内省排序，我感到很新奇，就研究了一下。</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>所有本文的讨论基于<a href="https://git.ustclug.org/eipi10/public/blob/master/stl_algo.h" title="stl_algo.h" target="_blank" rel="external">stl_algo.h</a></p>
+<h2 id="开搞"><a href="#开搞" class="headerlink" title="开搞"></a>开搞</h2><h3 id="std-sort"><a href="#std-sort" class="headerlink" title="std::sort"></a>std::sort</h3><p>std::sort总共有两个重载的版本，如下所示</p>
+<pre>
+template&lt;typename _RandomAccessIterator&gt;
+    inline void
+    sort(_RandomAccessIterator __first, _RandomAccessIterator __last)
+
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    inline void
+    sort(_RandomAccessIterator __first, _RandomAccessIterator __last,
+     _Compare __comp)
+</pre>
+
+<p>可以看出，一个是带了二元谓词的，一个是没带。没带的用的是</p>
+<pre>__gnu_cxx::__ops::__iter_less_iter()</pre>
+
+<p>这个是什么呢？在predefined_ops.h中line 37-48 可以看到。</p>
+<pre>
+struct _Iter_less_iter
+  {
+    template&lt;typename _Iterator1, typename _Iterator2&gt;
+      _GLIBCXX14_CONSTEXPR
+      bool
+      operator()(_Iterator1 __it1, _Iterator2 __it2) const
+      { return *__it1 < *__it2; }
+  };
+
+inline _Iter_less_iter
+  __iter_less_iter()
+  { return _Iter_less_iter(); }
+</pre>
+
+<p>看起来就是比较两个迭代器指向的数据，如果前者小于后者，就返回true，否则返回false。</p>
+<p>然后回到std::sort。可见它们在末尾都不约而同地调用了<code>std::__sort</code></p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    inline void
+    __sort(_RandomAccessIterator __first, _RandomAccessIterator __last,
+       _Compare __comp)
+    {
+      if (__first != __last)
+    {
+      std::__introsort_loop(__first, __last,
+                std::__lg(__last - __first) * 2,
+                __comp);
+      std::__final_insertion_sort(__first, __last, __comp);
+    }
+    }
+</pre>
+
+<p>可见<code>std::__sort</code>先调用<code>std::__introsort_loop</code>，再调用<code>std::__final_insertion_sort</code>。而且<code>std::__introsort_loop</code>中调用了<code>std::__lg</code>。首先看<code>std::__lg</code>是什么。</p>
+<h3 id="std-lg"><a href="#std-lg" class="headerlink" title="std::__lg"></a>std::__lg</h3><pre>
+inline _GLIBCXX_CONSTEXPR int
+  __lg(int __n)
+  { return sizeof(int) * __CHAR_BIT__  - 1 - __builtin_clz(__n); }
+
+  inline _GLIBCXX_CONSTEXPR unsigned
+  __lg(unsigned __n)
+  { return sizeof(int) * __CHAR_BIT__  - 1 - __builtin_clz(__n); }
+
+  inline _GLIBCXX_CONSTEXPR long
+  __lg(long __n)
+  { return sizeof(long) * __CHAR_BIT__ - 1 - __builtin_clzl(__n); }
+
+  inline _GLIBCXX_CONSTEXPR unsigned long
+  __lg(unsigned long __n)
+  { return sizeof(long) * __CHAR_BIT__ - 1 - __builtin_clzl(__n); }
+
+  inline _GLIBCXX_CONSTEXPR long long
+  __lg(long long __n)
+  { return sizeof(long long) * __CHAR_BIT__ - 1 - __builtin_clzll(__n); }
+
+  inline _GLIBCXX_CONSTEXPR unsigned long long
+  __lg(unsigned long long __n)
+  { return sizeof(long long) * __CHAR_BIT__ - 1 - __builtin_clzll(__n); }
+</pre>
+
+<p>发现<code>std::__lg</code>作用于整数。其中有个<code>__builtin_clz</code>查了下发现是<a href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html" title="6.59 Other Built-in Functions Provided by GCC" target="_blank" rel="external">GCC Built-in Function</a></p>
+<blockquote>
+<p>— Built-in Function: int __builtin_clz (unsigned int x)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of leading 0-bits in x, starting at the most significant bit position. If x is 0, the result is undefined.</p>
+</blockquote>
+<p>就是在形参x非0时候返回x在二进制表示时前面0的个数，x为0该函数行为未定义。因此<code>std::__lg</code>返回的就是一个整数的二进制最高位。想一想就发现其实这是[log<sub>2</sub>x]([x]代表向下取整，下同)。</p>
+<h3 id="std-introsort-loop"><a href="#std-introsort-loop" class="headerlink" title="std::__introsort_loop"></a>std::__introsort_loop</h3><p>好了，这时再来看<code>std::__introsort_loop</code>。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Size, typename _Compare&gt;
+    void
+    __introsort_loop(_RandomAccessIterator __first,
+             _RandomAccessIterator __last,
+             _Size __depth_limit, _Compare __comp)
+    {
+      while (__last - __first > int(_S_threshold))
+    {
+      if (__depth_limit == 0)
+        {
+          std::__partial_sort(__first, __last, __last, __comp);
+          return;
+        }
+      --__depth_limit;
+      _RandomAccessIterator __cut =
+        std::__unguarded_partition_pivot(__first, __last, __comp);
+      std::__introsort_loop(__cut, __last, __depth_limit, __comp);
+      __last = __cut;
+    }
+    }
+</pre>
+
+<p>可见<code>std::__lg(__last - __first) * 2</code>，即2log<sub>2</sub>(区间长度)，就是<code>__depth_limit</code>。至于为什么选这个作为深度阈值，大概是因为partition的递归树一层是cn，那么只有树高度为O(logN)才会比较稳，要不放任其递归，就可能导致非常糟糕的partition，最终造成Θ(N<sup>2</sup>)的复杂度。</p>
+<blockquote>
+<p>Theorem 2 Assuming an O(logN) subproblem tree depth limit and an O(NlogN) worst-case time bound for Heapsort , the worst-case computing time for Introsort is Θ(NlogN).</p>
+<p>Proof: The time for partitioning is bounded by times the number of levels of partitioning, which is bounded by the subproblem tree depth limit. Hence the total time for partitioning is O(NlogN). Suppose Introsort calls Heapsort times on sequences of length n<sub>1</sub>,…,n<sub>j</sub>.<br>Let c be a constant such that cNlog<sub>2</sub>N bounds the time for Heapsort on a sequence of length N; then the time for all the calls of Heapsort is bounded by</p>
+<p>&nbsp;&nbsp;j&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j<br>&nbsp;∑ cn<sub>i</sub>log<sub>2</sub>n<sub>i</sub> &nbsp;&nbsp;&nbsp;&nbsp;≤ &nbsp;&nbsp;&nbsp;&nbsp;c(log<sub>2</sub>N)∑n<sub>i</sub> &nbsp;&nbsp;&nbsp;&nbsp;≤ &nbsp;&nbsp;&nbsp;&nbsp;cNlog<sub>2</sub>N<br>i=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i=1</p>
+<p>or O(NlogN) also. Therefore the total time for Introsort is O(NlogN).<br>The lower bound is also Ω(NlogN), since a sequence such as an already sorted sequence<br>produces equal length partitions in all cases, resulting in log<sub>2</sub>N levels each taking Ω(N) time.</p>
+</blockquote>
+<p>至于为什么是2 * log<sub>2</sub>N，而不是2.333 * log<sub>2</sub>N或者6.666 * log<sub>2</sub>N，原论文也是有解释的。首先不能太小，否则太频繁的调用堆排序，一点也不比一开始就调堆排序好。然后之所以是2，是根据经验<del>玄学</del>，2会产生更好的结果。</p>
+<blockquote>
+<p>Although any choice for the constant factor in this bound will ensure an overall time bound of O(NlogN), it must not<br>be so small that the algorithm calls heapsort too frequently (causing it to be little better than using heapsort in the first place). In the following pseudo-code the depth limit is 2[log<sub>2</sub>N], since this value empirically produces good results.</p>
+</blockquote>
+<p>然后接着看<code>std::__introsort_loop</code>。需要<code>__last - __first</code>大于<code>int(_S_threshold)</code>才能执行。</p>
+<pre>
+enum { _S_threshold = 16 };
+</pre>
+
+<p>毕竟如果区间长度小，再分治就不合算了，改为插入排序，在基本有序情况下插入排序还是很稳的。至于为什么是16，好像原论文里也没说。。目测又是经验值。<del>玄学</del></p>
+<p>如果递归深度<code>__depth_limit</code>达到了，就调用<code>std::__partial_sort</code>，其内部用的是堆排序。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    inline void
+    __partial_sort(_RandomAccessIterator __first,
+           _RandomAccessIterator __middle,
+           _RandomAccessIterator __last,
+           _Compare __comp)
+    {
+      std::__heap_select(__first, __middle, __last, __comp);
+      std::__sort_heap(__first, __middle, __comp);
+    }
+</pre>
+
+<p>每循环一次<code>__depth_limit</code>都会自减1。然后用<code>std::__unguarded_partition_pivot</code>取出一个pivot，对[pivot, last)递归调用<code>std::__introsort_loop</code>，并接着在first与pivot间进行循环。所以说并不是[first,pivot)没算到，而是它在下一次循环算的，每次只递归后面的部分。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    inline _RandomAccessIterator
+    __unguarded_partition_pivot(_RandomAccessIterator __first,
+                _RandomAccessIterator __last, _Compare __comp)
+    {
+      _RandomAccessIterator __mid = __first + (__last - __first) / 2;
+      std::__move_median_to_first(__first, __first + 1, __mid, __last - 1, __comp);
+      return std::__unguarded_partition(__first + 1, __last, __first, __comp);
+    }
+</pre>
+
+<p><code>std::__unguarded_partition_pivot</code>里面调了<code>std::__move_median_to_first</code>与<code>std::__unguarded_partition</code>，先看这两个函数。</p>
+<pre>
+template&lt;typename _Iterator, typename _Compare&gt;
+    void
+    __move_median_to_first(_Iterator __result,_Iterator __a, _Iterator __b,
+               _Iterator __c, _Compare __comp)
+    {
+      if (__comp(__a, __b))
+    {
+      if (__comp(__b, __c))
+        std::iter_swap(__result, __b);
+      else if (__comp(__a, __c))
+        std::iter_swap(__result, __c);
+      else
+        std::iter_swap(__result, __a);
+    }
+      else if (__comp(__a, __c))
+    std::iter_swap(__result, __a);
+      else if (__comp(__b, __c))
+    std::iter_swap(__result, __c);
+      else
+    std::iter_swap(__result, __b);
+    }
+</pre>
+
+<p>可以看出<code>std::__move_median_to_first</code>就是把<code>__first + 1, __mid, __last - 1</code>三者指向的值的中位数找出，与<code>__first</code>指向的数交换。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    _RandomAccessIterator
+    __unguarded_partition(_RandomAccessIterator __first,
+              _RandomAccessIterator __last,
+              _RandomAccessIterator __pivot, _Compare __comp)
+    {
+      while (true)
+    {
+      while (__comp(__first, __pivot))
+        ++__first;
+      --__last;
+      while (__comp(__pivot, __last))
+        --__last;
+      if (!(__first < __last))
+        return __first;
+      std::iter_swap(__first, __last);
+      ++__first;
+    }
+    }
+</pre>
+
+<p>大概就是<code>__first</code>从前往后搜，找到比<code>__pivot</code>大的数；然后<code>__last</code>从后往前搜，找到比<code>__pivot</code>小的数。如果此时<code>__first</code>与<code>__last</code>交叉，则结束，返回<code>__first</code>。否则交换<code>__first</code>与<code>__last</code>指向的元素，重复上述步骤。<code>__pivot</code>即上一步<code>std::__move_median_to_first</code>得到的中位数。因此<code>std::__unguarded_partition_pivot</code>返回的就是pivot，的位置，从<code>__first+1</code>到<code>__last</code>以pivot为界，前面比<code>__first</code>指向的值小，后面比<code>__first</code>指向的值大。</p>
+<h3 id="std-final-insertion-sort"><a href="#std-final-insertion-sort" class="headerlink" title="std::__final_insertion_sort"></a>std::__final_insertion_sort</h3><p>又回到最初的起点<code>std::__sort</code>。<code>std::__introsort_loop</code>后调的是<code>std::__final_insertion_sort</code>。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    void
+    __final_insertion_sort(_RandomAccessIterator __first,
+               _RandomAccessIterator __last, _Compare __comp)
+    {
+      if (__last - __first > int(_S_threshold))
+    {
+      std::__insertion_sort(__first, __first + int(_S_threshold), __comp);
+      std::__unguarded_insertion_sort(__first + int(_S_threshold), __last,
+                      __comp);
+    }
+      else
+    std::__insertion_sort(__first, __last, __comp);
+    }
+</pre>
+
+<p>这时<code>_S_threshold</code>又出现了。当区间长度小于16，则直接调用<code>std::__insertion_sort</code>，否则对前16个调用<code>std::__insertion_sort</code>，对后面的调用<code>std::__unguarded_insertion_sort</code>。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    void
+    __insertion_sort(_RandomAccessIterator __first,
+             _RandomAccessIterator __last, _Compare __comp)
+    {
+      if (__first == __last) return;
+
+      for (_RandomAccessIterator __i = __first + 1; __i != __last; ++__i)
+    {
+      if (__comp(__i, __first))
+        {
+          typename iterator_traits&lt;_RandomAccessIterator&gt;::value_type
+        __val = _GLIBCXX_MOVE(*__i);
+          _GLIBCXX_MOVE_BACKWARD3(__first, __i, __i + 1);
+          *__first = _GLIBCXX_MOVE(__val);
+        }
+      else
+        std::__unguarded_linear_insert(__i,
+                __gnu_cxx::__ops::__val_comp_iter(__comp));
+    }
+    }
+</pre>
+
+<p><code>std::__insertion_sort</code>和平常的insertion sort不同在于首先比较第一个元素和当前元素，如果满足<code>__comp</code>的条件，直接把当前元素移到第一个元素处，否则调用<code>std::__unguarded_linear_insert</code>。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    void
+    __unguarded_linear_insert(_RandomAccessIterator __last,
+                  _Compare __comp)
+    {
+      typename iterator_traits&lt;_RandomAccessIterator&gt;::value_type
+    __val = _GLIBCXX_MOVE(*__last);
+      _RandomAccessIterator __next = __last;
+      --__next;
+      while (__comp(__val, __next))
+    {
+      *__last = _GLIBCXX_MOVE(*__next);
+      __last = __next;
+      --__next;
+    }
+      *__last = _GLIBCXX_MOVE(__val);
+    }
+</pre>
+
+<p>可以看出，<code>std::__unguarded_linear_insert</code>就是提供了insertion sort中的插入部分。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    inline void
+    __unguarded_insertion_sort(_RandomAccessIterator __first,
+                   _RandomAccessIterator __last, _Compare __comp)
+    {
+      for (_RandomAccessIterator __i = __first; __i != __last; ++__i)
+    std::__unguarded_linear_insert(__i,
+                __gnu_cxx::__ops::__val_comp_iter(__comp));
+    }
+</pre>
+
+<p><code>std::__unguarded_insertion_sort</code>就是对从<code>__first</code>到<code>__last</code>调用<code>std::__unguarded_linear_insert</code>(插入操作)。</p>
+<h2 id="就这样结束了？"><a href="#就这样结束了？" class="headerlink" title="就这样结束了？"></a>就这样结束了？</h2><p>然而有个问题，搞那么多种insertion sort干什么？可以看到，<code>std::__unguarded_linear_insert</code>就是直接往前找位置插入，不管会不会越界。所以<code>std::__insertion_sort</code>调用是毫无问题的，因为<code>std::__insertion_sort</code>会首先和第一个元素比较，保证了不会越界。但是<code>std::__unguarded_insertion_sort</code>并没有检查，凭什么也能调？所以要看看<code>std::__unguarded_insertion_sort</code>在哪被调用的。</p>
+<pre>
+template&lt;typename _RandomAccessIterator, typename _Compare&gt;
+    void
+    __final_insertion_sort(_RandomAccessIterator __first,
+               _RandomAccessIterator __last, _Compare __comp)
+    {
+      if (__last - __first > int(_S_threshold))
+    {
+      std::__insertion_sort(__first, __first + int(_S_threshold), __comp);
+      std::__unguarded_insertion_sort(__first + int(_S_threshold), __last,
+                      __comp);
+    }
+      else
+    std::__insertion_sort(__first, __last, __comp);
+    }
+
+</pre>
+
+<p>可以查到，只有<code>std::__final_insertion_sort</code>调了。所以从调用的方式看来，一定能够保证最值会出现在前16个数中。而且如果要区间长度大于16，那么<code>std::__introsort_loop</code>就一定会被调用。那么就由<code>std::__introsort_loop</code>来保证最值出现在前16个数中了。这个函数结束就只有两个条件</p>
+<ul>
+<li>递归深度为0</li>
+<li>区间长度小16</li>
+</ul>
+<p>由于如果要调用<code>std::__unguarded_insertion_sort</code>，一开始一定是区间长度大于16。那么此时递归深度<code>__depth_limit</code> ≥ 2[log<sub>2</sub>16] = 8，一定会调用<code>std::__unguarded_insertion_sort</code>，则保证前半部分值和后半部分值由<code>__cut</code>分开。</p>
+<ol>
+<li>如果递归深度为0，那么调用堆排序的序列长度大于16。由于保证了最值会出现在<code>__first</code>与<code>__last</code>之间，因此堆排序后最值肯定在<code>__first</code>，自然也就肯定在前16个元素中了。</li>
+<li>如果区间长度小于16。由于每次循环都能缩小区间且保证最值出现在下一次循环的区间中，因此一定能满足最小值在该区间(长度小于16)中，自然也就保证在前16个中了。所以实现是没有问题的，一定能够保证不会越界。</li>
+</ol>
+<p>那么为什么要搞<code>std::__unguarded_insertion_sort</code>呢？只是insertion sort不好吗？粗略算一下，可能是因为insertion sort慢。。一个insertion sort大概是这样</p>
+<pre>
+while j > 0 and comp(A[j-1], A[j])
+    swap(A[j-1], A[j])
+    j = j - 1
+</pre>
+
+<p>假定j = N，最多需要2N次比较，3N次赋值(swap)，N次自减。<code>std::__unguarded_linear_insert</code>，由于unguarded，而且实现好像是选择排序，且不用判断是否越界，最多N次比较，2N次赋值，N次自减。就算走另一个分支，最多3N次自增，N次赋值，N次比较。所以会比一般的插入排序要优秀。虽然看起来差不多，大数据下也许差距就非常可观了。要不是效率STL的实现者也不会没事搞这么复杂吧。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>STL源码有空还是读读，可以学不少东西。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Musser D R. Introspective sorting and selection algorithms[J]. Softw., Pract. Exper., 1997, 27(8): 983-993.</li>
+<li>GNU STL</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/28/Cpp效率远不如C吗？/" rel="next" title="Cpp效率远不如C吗？">
+                <i class="fa fa-chevron-left"></i> Cpp效率远不如C吗？
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/06/std-sort是怎么实现的/"
+     data-title="std::sort是怎么实现的"
+     data-content=""
+     data-url="http://yoursite.com/2016/10/06/std-sort是怎么实现的/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/06/std-sort是怎么实现的/"
+           data-title="std::sort是怎么实现的" data-url="http://yoursite.com/2016/10/06/std-sort是怎么实现的/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="eipi10" />
+          <p class="site-author-name" itemprop="name">eipi10</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">Artikel</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Kategorien</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/eipi10ydz/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开搞"><span class="nav-number">2.</span> <span class="nav-text">开搞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-sort"><span class="nav-number">2.1.</span> <span class="nav-text">std::sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-lg"><span class="nav-number">2.2.</span> <span class="nav-text">std::__lg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-introsort-loop"><span class="nav-number">2.3.</span> <span class="nav-text">std::__introsort_loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-final-insertion-sort"><span class="nav-number">2.4.</span> <span class="nav-text">std::__final_insertion_sort</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#就这样结束了？"><span class="nav-number">3.</span> <span class="nav-text">就这样结束了？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">eipi10</span>
+</div>
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"eipi10"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
