@@ -84,16 +84,12 @@
 
 
 
-<meta name="description" content="算法课老师留了一道思考题，对长度为n的数组循环移位k。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="一道题和STL的list">
-<meta property="og:url" content="http://yoursite.com/2016/09/07/一道题和STL的list/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="e^(iπ) + 1 = 0">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="e^(iπ) + 1 = 0">
-<meta property="og:description" content="算法课老师留了一道思考题，对长度为n的数组循环移位k。">
-<meta property="og:updated_time" content="2016-09-10T15:43:41.907Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一道题和STL的list">
-<meta name="twitter:description" content="算法课老师留了一道思考题，对长度为n的数组循环移位k。">
+<meta name="twitter:title" content="e^(iπ) + 1 = 0">
 
 
 
@@ -114,9 +110,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/07/一道题和STL的list/"/>
+  <link rel="canonical" href="http://yoursite.com/page/2/"/>
 
-  <title> 一道题和STL的list | e^(iπ) + 1 = 0 </title>
+  <title> e^(iπ) + 1 = 0 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -137,7 +133,9 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,9 +222,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
   
@@ -246,7 +244,10 @@
             
             
               
-                一道题和STL的list
+                
+                <a class="post-title-link" href="/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/" itemprop="url">
+                  PyQt实现类似音速启动的GUI程序
+                </a>
               
             
           </h1>
@@ -258,8 +259,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Veröffentlicht am</span>
-            <time itemprop="dateCreated" datetime="2016-09-07T00:33:18+08:00" content="2016-09-07">
-              2016-09-07
+            <time itemprop="dateCreated" datetime="2016-01-22T21:44:35+08:00" content="2016-01-22">
+              2016-01-22
             </time>
           </span>
 
@@ -272,8 +273,8 @@
               <span class="post-meta-item-text">in</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index">
-                    <span itemprop="name">C++</span>
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
                   </a>
                 </span>
 
@@ -284,8 +285,8 @@
 
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/C/STL/" itemprop="url" rel="index">
-                    <span itemprop="name">STL</span>
+                  <a href="/categories/Python/GUI/" itemprop="url" rel="index">
+                    <span itemprop="name">GUI</span>
                   </a>
                 </span>
 
@@ -300,8 +301,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/07/一道题和STL的list/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/一道题和STL的list/" itemprop="commentsCount"></span>
+                <a href="/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -324,66 +325,23 @@
       
 
       
-        <p>算法课老师留了一道思考题，对长度为n的数组循环移位k。</p>
-<a id="more"></a>
-<p>老师没有说限制条件。照这样的话，随便搞一个新的数组也行，岂不就没意思了。由于没什么好的想法，后来在网上找到了一个。</p>
-<ul>
-<li>假定数组是v[0…n-1]</li>
-<li>首先是k %= n</li>
-<li>然后依次翻转v[0…k-1], v[k…n-1], v[0…n-1]即可</li>
-</ul>
-<p>然后我就想用模板，这样可以适用多种容器。由于一时忘了algorithm<br>里面有reverse，就自己写了个。</p>
-<pre>
-
-template&lt;typename Iterator&gt;
-void reverse_impl(Iterator beg, Iterator end)
-{
-    for(std::advance(end, -1); std::distance(beg, end) > 0; std::advance(beg, 1), std::advance(end, -1))
-    {
-        std::swap(*beg, *end);
-    }
-}
-
-template&lt;typename T&gt;
-void my_reverse(int k, T &v)
-{
-    k %= v.size();
-    auto beg = v.begin(), end = v.end(), adv = beg;
-    std::advance(adv, k);
-    reverse_impl(beg, adv);
-    reverse_impl(adv, end);
-    reverse_impl(v.begin(), v.end());
-}
-//std::list<int> il = {1, 2, 3, 4, 5, 6, 7, 8};
-//my_reverse(3, il);
-</int></pre>
-
-<p>前面用vector检查都没问题，结果list时候就结果不对。本来我用advance，distance就是为了针对list这种不支持随机访问的迭代器的。。。结果看起来只做了前两步，最后一步漏掉了。结果输出之后才发现其实是因为最后一步做了两次。我发现两个迭代器的差变化为7, 5, 3, 1, 8, 6, 4, 2, 0，并没有按我想象的在中间停下。查了下STL源码剖析，发现是因为list是双向链表，且为了满足STL“前闭后开”的区间要求，在list的“末尾”会有一个空白节点，这样5-8的差距比前面的1-4多1就有了解释。可见链表中元素被我交换了两次，相当于没有交换。同时如下所示，在取节点数据时候取的就是尾后迭代器的前一个节点的数据。</p>
-<pre>
-
-reference back() { return *(--end()); }
-
-</pre>
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>再一次映证了不要自己造轮子的道理<del><em>(就是因为自己菜造出来不对)</em></del>，不过也是自己没想到algorithm里面有。同时在使用STL的时候需要关注其实现，在遇到奇奇怪怪的问题时候起码能够有点反应。</p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
-<li>侯捷. STL 源码剖析[M]. 华中科技大学出版社, 2002.</li>
-</ol>
-
+        
+          <p>之前一直在用音速启动，就是一个快速打开文件夹和文件的软件</p>
+<p>然后听说是流氓软件(其实自己也发现它会篡改主页)，再加上最近想顺路学一把PyQt，就打算自己写一个，遂决定删掉。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/01/22/pyqt-e5-ae-9e-e7-8e-b0-e7-b1-bb-e4-bc-bc-e9-9f-b3-e9-80-9f-e5-90-af-e5-8a-a8-e7-9a-84gui-e7-a8-8b-e5-ba-8f/#more" rel="contents">
+              Weiterlesen &raquo;
+            </a>
+          </div>
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
@@ -391,55 +349,23 @@ reference back() { return *(--end()); }
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/08/17/Cpp中throw是怎么实现的/" rel="next" title="Cpp中throw是怎么实现的?">
-                <i class="fa fa-chevron-left"></i> Cpp中throw是怎么实现的?
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/28/Cpp效率远不如C吗？/" rel="prev" title="Cpp效率远不如C吗？">
-                Cpp效率远不如C吗？ <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
 
       
+      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-        <div class="ds-share flat" data-thread-key="2016/09/07/一道题和STL的list/"
-     data-title="一道题和STL的list"
-     data-content=""
-     data-url="http://yoursite.com/2016/09/07/一道题和STL的list/">
-  <div class="ds-share-inline">
-    <ul  class="ds-share-icons-16">
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
-      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
-      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
-      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
-      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
-      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
-
-    </ul>
-    <div class="ds-share-icons-more">
-    </div>
-  </div>
-</div>
-      
-    </div>
-  </div>
 
 
           </div>
@@ -447,14 +373,6 @@ reference back() { return *(--end()); }
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/09/07/一道题和STL的list/"
-           data-title="一道题和STL的list" data-url="http://yoursite.com/2016/09/07/一道题和STL的list/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -474,17 +392,8 @@ reference back() { return *(--end()); }
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -538,17 +447,6 @@ reference back() { return *(--end()); }
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -645,10 +543,6 @@ reference back() { return *(--end()); }
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 
