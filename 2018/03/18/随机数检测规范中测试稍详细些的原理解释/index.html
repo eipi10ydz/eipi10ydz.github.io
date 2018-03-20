@@ -1,0 +1,941 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="随机数检测规范里面提供了一份附录A，是测试的原理解释。然而里面的内容对于我这种菜鸡稍微有点简略，所以我稍微补充总结了一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机数检测规范中测试稍详细些的原理解释">
+<meta property="og:url" content="http://yoursite.com/2018/03/18/随机数检测规范中测试稍详细些的原理解释/index.html">
+<meta property="og:site_name" content="e^(iπ) + 1 = 0">
+<meta property="og:description" content="随机数检测规范里面提供了一份附录A，是测试的原理解释。然而里面的内容对于我这种菜鸡稍微有点简略，所以我稍微补充总结了一下。">
+<meta property="og:updated_time" content="2018-03-20T02:48:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="随机数检测规范中测试稍详细些的原理解释">
+<meta name="twitter:description" content="随机数检测规范里面提供了一份附录A，是测试的原理解释。然而里面的内容对于我这种菜鸡稍微有点简略，所以我稍微补充总结了一下。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/18/随机数检测规范中测试稍详细些的原理解释/"/>
+
+  <title> 随机数检测规范中测试稍详细些的原理解释 | e^(iπ) + 1 = 0 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">e^(iπ) + 1 = 0</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                随机数检测规范中测试稍详细些的原理解释
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-18T18:39:40+08:00" content="2018-03-18">
+              2018-03-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/信安/" itemprop="url" rel="index">
+                    <span itemprop="name">信安</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/信安/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/信安/数学/概率统计/" itemprop="url" rel="index">
+                    <span itemprop="name">概率统计</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/03/18/随机数检测规范中测试稍详细些的原理解释/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/18/随机数检测规范中测试稍详细些的原理解释/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>随机数检测规范里面提供了一份附录A，是测试的原理解释。然而里面的内容对于我这种菜鸡稍微有点简略，所以我稍微补充总结了一下。</p>
+<a id="more"></a>
+<h1 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h1><h2 id="中心极限定理"><a href="#中心极限定理" class="headerlink" title="中心极限定理"></a>中心极限定理</h2><ul>
+<li><p>设$X_{1}$, $X_{2}$, …, $X_{n}$, … 为独立同分布的随机变量, $E(X_{i})=a$, $Var(X_{i})=\sigma^{2}(0 &lt; \sigma^{2} &lt; \infty)$. 则对任何实数$x$, 有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{1}{\sqrt{n} \sigma}(X_{1} + … + X_{n} - na) \leq x) = \phi(x) $$</p>
+</li>
+<li><p>这里$\phi(x)$是标准正态分布$N(0,1)$的分布函数, 即</p>
+<p>  $$ \phi(x) = \dfrac{1}{\sqrt{2\pi}}\int^{x}_{-\infty}e^{-t^{2}/2}dt $$</p>
+</li>
+</ul>
+<h2 id="De-Moivre–Laplace定理"><a href="#De-Moivre–Laplace定理" class="headerlink" title="De Moivre–Laplace定理"></a>De Moivre–Laplace定理</h2><ul>
+<li><p>设$X_{1}$, $X_{2}$, …, $X_{n}$, … 独立同分布, $X_{i}$的分布是</p>
+<p>  $$ P(X_{i} = 1) = p, P(X_{i} = 0) = 1 - p \quad (0 &lt; p &lt; 1) $$ </p>
+</li>
+<li><p>则对任何实数$x$, 有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{1}{\sqrt{np(1 - p)}}(X_{1} + … + X_{n} - np) \leq x) = \phi(x) $$</p>
+</li>
+</ul>
+<h2 id="皮尔森卡方检验"><a href="#皮尔森卡方检验" class="headerlink" title="皮尔森卡方检验"></a><a href="https://en.wikipedia.org/wiki/Chi-squared_test#Pearson&#39;s_chi-squared_test" target="_blank" rel="external">皮尔森卡方检验</a></h2><h2 id="P值"><a href="#P值" class="headerlink" title="P值"></a><a href="https://en.wikipedia.org/wiki/P-value" target="_blank" rel="external">P值</a></h2><p>以下为我的理解：设定了置信系数$\alpha$以后，通过分布函数可以求出临界点 $ x_{\alpha} $，那么在临界点以内的观测值可以算作零假设成立，以外的观测值可以认为推翻零假设。$P$值即$1 - F(x_{i})$，其中$x_{i}$为随机变量观测值，$F(x_{i})$为随机变量在此观测值下的分布函数值。根据概率密度函数的图像可以看出(概率密度函数的积分为分布函数)，当$P$值大于等于置信系数，可知观测的随机变量值位于临界点内，从而可支持零假设成立，反之，$P$值小于置信系数，观测的随机变量值位于临界点外，可以认为推翻零假设。$P$值提供了一种假设检验的方式。</p>
+<h2 id="P值与erfc-igamc等函数之间的关系"><a href="#P值与erfc-igamc等函数之间的关系" class="headerlink" title="P值与erfc, igamc等函数之间的关系"></a>P值与erfc, igamc等函数之间的关系</h2><ul>
+<li><p>$erfc$</p>
+<p>  $$ erfc(x) = \dfrac{2}{\sqrt{\pi}} \int^{\infty}_{x}e^{-u^{2}}du $$</p>
+</li>
+<li><p>$igamc$</p>
+<p>  $$ igamc(a, x) = \dfrac{\int^{\infty}_{x} e^{-t} t^{a-1}dt}{\Gamma(a)} $$</p>
+</li>
+<li><p>对于标准正态分布，考虑观测值大于0($x_{i} &gt; 0$)的情况(正态分布对称，可只考虑半边)，有</p>
+<p>  $$ 1 - \phi(x) = \dfrac{1}{\sqrt{2\pi}}\int^{\infty}_{x}e^{-t^{2}/2}dt = \dfrac{1}{\sqrt{\pi}}\int^{\infty}_{x}e^{-t^{2}/2}d(\dfrac{t}{\sqrt{2}}) $$</p>
+<ul>
+<li><p>使用$z$替换$\dfrac{t}{\sqrt{2}}$，可得</p>
+<p>  $$ 1 - \phi(x) = \dfrac{1}{\sqrt{\pi}}\int^{\infty}_{x/\sqrt{2}}e^{-z^{2}/2}dz $$</p>
+</li>
+<li><p>对比$erfc$函数可得</p>
+<p>  $$ 2(1 - \phi(x)) = erfc(\dfrac{x}{\sqrt{2}}) $$</p>
+</li>
+<li><p>又由于标准正态分布关于y轴对称，因此，只有观测值位于[$-x_{\alpha/2}$, $x_{\alpha/2}$]之间才可以支持零假设成立。因此需要满足</p>
+<p>  $$ 1 - \phi(x_{i}) \geq \dfrac{\alpha}{2} $$</p>
+</li>
+<li><p>即如果支持零假设，需满足下面条件</p>
+<p>  $$ erfc(\dfrac{x_{i}}{\sqrt{2}}) = 2(1 - \phi(x_{i})) \geq \alpha $$</p>
+</li>
+<li><p>即观测的随机变量为正态分布时，需要使用$erfc(\dfrac{x}{\sqrt{2}})$作为$P$值</p>
+</li>
+</ul>
+</li>
+<li><p>对于自由度为$k$的卡方分布，假定其分布函数为$F_{k}(x)$，有</p>
+<p>  $$ 1 - F_{k}(x) = 1 - \dfrac{\gamma(k/2, x/2)}{\Gamma(k/2)} = 1 - \dfrac{\int_{0}^{x/2}t^{k/2-1}e^{-t}dt}{\int_{0}^{\infty}t^{k/2-1}e^{-t}dt} = \dfrac{\int_{x/2}^{\infty}t^{k/2-1}e^{-t}dt}{\Gamma(k/2)} = igamc(\dfrac{k}{2}, \dfrac{x}{2}) $$</p>
+<ul>
+<li><p>如果支持零假设，需满足下面条件</p>
+<p>  $$ 1 - F_{k}(x) = igamc(\dfrac{k}{2}, \dfrac{x}{2}) \geq \alpha $$</p>
+</li>
+<li><p>即观察的随机变量为卡方分布时，需要使用$igamc(\dfrac{k}{2}, \dfrac{x}{2})$作为$P$值</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="卡方分布相加后的分布"><a href="#卡方分布相加后的分布" class="headerlink" title="卡方分布相加后的分布"></a>卡方分布相加后的分布</h2><ul>
+<li><p>设X和Y分别有密度函数$p_{X}(x)$和$p_{Y}(y)$，且$X$和$Y$相互独立，则$Z = X + Y$有分布函数</p>
+<p>  $$ p_{Z}(z) = \int_{-\infty}^{+\infty}p_{X}(x)p_{Y}(z-x)dx $$</p>
+</li>
+<li><p>对于自由度为k的卡方分布，有概率密度函数</p>
+<p>  $$ f_{k}(x) = \dfrac{x^{k/2-1}e^{-x/2}}{2^{k/2}\Gamma(\dfrac{k}{2})} $$</p>
+</li>
+<li><p>则对于自由度分别为$m$和$n$的卡方分布$X$和$Y$，有$Z=X+Y$的概率密度函数如下，其中由于卡方分布满足随机变量值非负，调整积分上下限($x \geq 0$且$z - x \geq 0$)，则</p>
+<p>  \begin{equation}<br>  \begin{split}<br>  p_{Z}(z) &amp;= \int_{0}^{z} \dfrac{x^{m/2-1}e^{-x/2}}{2^{m/2}\Gamma(\dfrac{m}{2})} \dfrac{(z-x)^{n/2-1}e^{-(z-x)/2}}{2^{n/2}\Gamma(\dfrac{n}{2})}dx \\<br>  &amp;= \dfrac{e^{-z/2}z^{(m+n)/2-1}}{2^{(m+n)/2}\Gamma(\dfrac{m}{2})\Gamma(\dfrac{n}{2})} \int_{0}^{z}\dfrac{x}{z}^{m/2-1}(1-\dfrac{x}{z})^{n/2-1}d\dfrac{x}{z} \\<br>  &amp;= \dfrac{e^{-z/2}z^{(m+n)/2-1}}{2^{(m+n)/2}\Gamma(\dfrac{m}{2})\Gamma(\dfrac{n}{2})} \int_{0}^{1}t^{m/2-1}(1-t)^{n/2-1}dt \\<br>  &amp;= \dfrac{e^{-z/2}z^{(m+n)/2-1}}{2^{(m+n)/2}\Gamma(\dfrac{m}{2})\Gamma(\dfrac{n}{2})} B(\dfrac{m}{2},\dfrac{n}{2}) \\<br>  &amp;= \dfrac{e^{-z/2}z^{(m+n)/2-1}}{2^{(m+n)/2}\Gamma(\dfrac{m+n}{2})}\\<br>  \end{split}<br>  \end{equation}</p>
+</li>
+<li><p>其中利用了B函数(贝塔函数)的性质</p>
+<p>  $$ B(x,y) = \int_{0}^{1} t^{x-1}(1-t)^{y-1} dt $$</p>
+<p>  $$ B(x,y) = \dfrac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)} $$</p>
+</li>
+<li><p>可见Z的概率密度函数满足自由度为$m+n$的卡方分布，因此对于相互独立的自由度分别为$m$和$n$的卡方分布，它们的和的分布为自由度为$m+n$的卡方分布</p>
+</li>
+</ul>
+<h1 id="15项检测"><a href="#15项检测" class="headerlink" title="15项检测"></a>15项检测</h1><h2 id="单比特频数检测"><a href="#单比特频数检测" class="headerlink" title="单比特频数检测"></a>单比特频数检测</h2><ul>
+<li><p>可知比特序列被经过转换，0 -&gt; -1, 1 -&gt; 1，从而单比特代表的随机变量$X_{i}$满足以下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  X_{i} &amp; 1 &amp; -1 \\<br>  \hline<br>  p &amp; \dfrac{1}{2} &amp; \dfrac{1}{2} \\<br>  \end{array} $$</p>
+</li>
+<li><p>由于单比特代表的随机变量$X_{i}$为独立同分布，且可计算得到该分布满足$E(X_{i})= 0$, $Var(X_{i}) = 1$，由中心极限定理，有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{S_{n}}{\sqrt{n}} \leq x) = \phi(x) $$</p>
+</li>
+<li><p>可知此时观测的随机变量为$\dfrac{S_{n}}{\sqrt{n}}$，满足正态分布，因此可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|S_{n}|}{\sqrt{2n}}) $$</p>
+</li>
+</ul>
+<h2 id="块内频数检测"><a href="#块内频数检测" class="headerlink" title="块内频数检测"></a>块内频数检测</h2><ul>
+<li><p>单比特代表的随机变量$X_{i}$满足以下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  X_{i} &amp; 1 &amp; 0 \\<br>  \hline<br>  p &amp; \dfrac{1}{2} &amp; \dfrac{1}{2} \\<br>  \end{array} $$</p>
+</li>
+<li><p>由$\pi_{i}$的计算方式可知，$\pi_{i} = \dfrac{X_{1} + X_{2} + … + X_{m}}{m}$由于$X_{i}$独立同分布，由$De Moivre–Laplace$定理有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(2\sqrt{m}(\pi_{i} - \dfrac{1}{2}) \leq x) = \phi(x) $$</p>
+</li>
+<li><p>可知$\pi_{i}$满足期望$\mu = \dfrac{1}{2}$, 方差$\sigma^{2} = \dfrac{1}{4m}$的正态分布</p>
+</li>
+<li><p>因此标准中的统计量为</p>
+<p>  $$ V = \sum\limits_{i=1}^{N} (\dfrac{\pi_{i} - \dfrac{1}{2}}{\dfrac{1}{\sqrt{2m}}})^2 $$</p>
+</li>
+<li><p>由于取的是不重叠子序列，因此易知$\pi_{i}$相互独立，根据卡方分布的定义可知$V$满足自由度为N的卡方分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(\dfrac{N}{2},\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="扑克检测"><a href="#扑克检测" class="headerlink" title="扑克检测"></a>扑克检测</h2><ul>
+<li><p>此检测利用了皮尔森卡方检验，长度为m的非重叠子序列可分为$2^{m}$类，且每个类别的子序列出现的概率完全相同，均为$\dfrac{1}{2^{m}}$，观测数为N，因此以下统计量</p>
+<p>  $$ V = \sum\limits_{i=1}^{2^{m}} \dfrac{(n_{i} - N / 2^{m})^2}{N/2^{m}} = \dfrac{2^{m}}{N}\sum\limits_{i=1}^{2^{m}}n_{i}^{2} - N $$</p>
+</li>
+<li><p>由皮尔森卡方检验，V满足自由度为$2^{m}-1$的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(\dfrac{2^{m}-1}{2},\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="重叠子序列检测"><a href="#重叠子序列检测" class="headerlink" title="重叠子序列检测"></a>重叠子序列检测</h2><ul>
+<li><p>这个检测利用了I. J. Good在1953年的论文中证明的一个结论，即对于以下统计值</p>
+<p>  $$ \psi^{2}_{m} = \dfrac{2^{m}}{n} \sum\limits_{i_{1}i_{2}…i_{m}} (v_{i_{1}i_{2}…i_{m}} - \dfrac{n}{2^{m}})^{2} = \dfrac{2^{m}}{n} \sum\limits_{i_{1}i_{2}…i_{m}} v^{2}_{i_{1}i_{2}…i_{m}} - n $$</p>
+<p>  $$ \psi^{2}_{m-1} = \dfrac{2^{m-1}}{n} \sum\limits_{i_{1}i_{2}…i_{m-1}} (v_{i_{1}i_{2}…i_{m-1}} - \dfrac{n}{2^{m-1}})^{2} = \dfrac{2^{m-1}}{n} \sum\limits_{i_{1}i_{2}…i_{m-1}} v^{2}_{i_{1}i_{2}…i_{m-1}} - n $$</p>
+<p>  $$ \psi^{2}_{m-2} = \dfrac{2^{m-2}}{n} \sum\limits_{i_{1}i_{2}…i_{m-2}} (v_{i_{1}i_{2}…i_{m-2}} - \dfrac{n}{2^{m-2}})^{2} = \dfrac{2^{m-2}}{n} \sum\limits_{i_{1}i_{2}…i_{m-2}} v^{2}_{i_{1}i_{2}…i_{m-2}} - n $$</p>
+<p>  $$ \nabla \psi^{2}_{m} = \psi^{2}_{m} - \psi^{2}_{m-1} $$</p>
+<p>  $$ \nabla^{2} \psi^{2}_{m} = \psi^{2}_{m} - 2\psi^{2}_{m-1} + \psi^{2}_{m-2} $$</p>
+</li>
+<li><p>有$\nabla \psi^{2}_{m}$和$\nabla^{2} \psi^{2}_{m}$满足自由度为$2^{m-1}$和$2^{m-2}$的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(2^{m-2},\dfrac{\nabla \psi^{2}_{m}}{2}) $$</p>
+<p>  $$ p-value = igamc(2^{m-3},\dfrac{\nabla^{2} \psi^{2}_{m}}{2}) $$</p>
+</li>
+</ul>
+<h2 id="游程总数检测"><a href="#游程总数检测" class="headerlink" title="游程总数检测"></a>游程总数检测</h2><ul>
+<li><p>这个检测利用了S Miramontes Beltrán书中讲到的一个结论，由于原来的分布函数在游程数过大的情况下计算量过大，不太方便，因此采用了近似分布</p>
+<p>  $$ Z = \dfrac{R - 2n\pi(1 - \pi)}{2\sqrt{n}\pi(1 - \pi)} $$</p>
+</li>
+<li><p>其中$R$为游程总数，且$Z$满足标准正态分布，即游程总数$V_{n} = \sum\limits_{k=1}^{n-1}r(k) + 1$满足期望$\mu = 2n\pi(1 - \pi)$, 方差$\sigma^{2} = 4n\pi^{2}(1 - \pi)^{2}$的正态分布，因此可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|V_{n} - 2n\pi(1 - \pi)|}{2\sqrt{2n}\pi(1 - \pi)}) $$</p>
+</li>
+</ul>
+<h2 id="游程分布检测"><a href="#游程分布检测" class="headerlink" title="游程分布检测"></a>游程分布检测</h2><ul>
+<li><p>一个长度为n的随机二元序列中长度为i的游程数目的期望值为</p>
+<p>  $$ e_{i} = \dfrac{n - i + 3}{2^{i+2}} $$</p>
+</li>
+<li><p>因此根据皮尔森卡方检验，可分为k类，且每一类的期望可由上面的公式给出，可得</p>
+<p>  $$ V_{1} = \sum_{i=1}^{k}\dfrac{(b_{i}-e_{i})^{2}}{e_{i}} $$</p>
+<p>  $$ V_{0} = \sum_{i=1}^{k}\dfrac{(g_{i}-e_{i})^{2}}{e_{i}} $$</p>
+</li>
+<li><p>且$V_{0}$，$V_{1}$均满足自由度为$k-1$的卡方分布。由卡方分布之和仍为卡方分布的前置知识，可得</p>
+<p>  $$ V = \sum_{i=1}^{k}\dfrac{(b_{i}-e_{i})^{2}}{e_{i}} + \sum_{i=1}^{k}\dfrac{(g_{i}-e_{i})^{2}}{e_{i}} $$</p>
+</li>
+<li><p>V满足自由度为$2k-2$的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(k-1, \dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="块内最大”1”游程检测"><a href="#块内最大”1”游程检测" class="headerlink" title="块内最大”1”游程检测"></a>块内最大”1”游程检测</h2><ul>
+<li><p>此检测利用了皮尔森卡方检验，长度为$m$的子序列的最大1游程可按照附录提供的表格分为$K + 1$类，且每个类别的子序列出现的概率也由附录提供的表格给定，观测数为N，因此以下统计量</p>
+<p>  $$ V = \sum\limits_{i=0}^{K} \dfrac{(v_{i} - N\pi_{i})^{2}}{N\pi_{i}} $$</p>
+</li>
+<li><p>由皮尔森卡方检验，V满足自由度为$K$的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(\dfrac{K}{2},\dfrac{V}{2}) $$</p>
+</li>
+<li><p>由于附录提供的表格中可得$m$为10000时有$K$为6，且标准中$m$取10000，因此有</p>
+<p>  $$ p-value = igamc(3,\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="二元推导检测"><a href="#二元推导检测" class="headerlink" title="二元推导检测"></a>二元推导检测</h2><ul>
+<li><p>单比特代表的随机变量$X_{i}$满足以下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  X_{i} &amp; 1 &amp; 0 \\<br>  \hline<br>  p &amp; \dfrac{1}{2} &amp; \dfrac{1}{2} \\<br>  \end{array} $$</p>
+</li>
+<li><p>按照标准中的操作，定义函数$\varepsilon_{i}^{(k)} = \varepsilon_{i}^{(k-1)} \oplus \varepsilon_{i+1}^{(k-1)}$，因此可得</p>
+<p>  $$ \varepsilon_{i}^{(4)} = \varepsilon_{i} \oplus \varepsilon_{i+4} $$</p>
+<p>  $$ \varepsilon_{i}^{(8)} = \varepsilon_{i} \oplus \varepsilon_{i+8} $$</p>
+</li>
+<li><p>之所以之选择$k$为4和8的情形，是因为标准中取$k$为3和7且异或操作进行了$k+1$次，以下假定$k$为4或8</p>
+</li>
+<li><p>累加时的变量满足变换1-&gt;1, 0-&gt;-1，记该随机变量为$Y_{i}$(由$\varepsilon_{i}^{(k)}$经过该变换得到)，则有</p>
+<p>  $$ \begin{array}<br>  \varepsilon_{i} &amp; \varepsilon_{i+k} &amp; \varepsilon_{i+2k} &amp; Y_{i} &amp; Y_{i+k} &amp; Y_{i}Y_{i+k} \\<br>  \hline 0 &amp; 0 &amp; 0 &amp; -1 &amp; -1 &amp; 1 \\<br>  \hline 0 &amp; 0 &amp; 1 &amp; -1 &amp; 1 &amp; -1 \\<br>  \hline 0 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 1 \\<br>  \hline 0 &amp; 1 &amp; 1 &amp; 1 &amp; -1 &amp; -1 \\<br>  \hline 1 &amp; 0 &amp; 0 &amp; 1 &amp; -1 &amp; -1 \\<br>  \hline 1 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\<br>  \hline 1 &amp; 1 &amp; 0 &amp; -1 &amp; 1 &amp; -1 \\<br>  \hline 1 &amp; 1 &amp; 1 &amp; -1 &amp; -1 &amp; 1 \\<br>  \end{array} $$</p>
+</li>
+<li><p>现证明$Y_{i}$与$Y_{i+k}$相互独立，$Y_{i}$与$Y_{i+k}$的协方差为</p>
+<p>  $$ Cov(Y_{i}, Y_{i+k}) = E(Y_{i}Y_{i+k}) - E(Y_{i})E(Y_{i+k}) $$</p>
+</li>
+<li><p>由表中数据计算可得$E(Y_{i}Y_{i+k}) = E(Y_{i}) = E(Y_{i+k}) = 0$，可知$Y_{i}$与$Y_{i+k}$的协方差$Cov(Y_{i}, Y_{i+k}) = 0$，因此$Y_{i}$与$Y_{i+k}$相互独立，从而$Y_{i}$满足独立同分布，且$Y_{i}$满足如下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  X_{i} &amp; 1 &amp; -1 \\<br>  \hline<br>  p &amp; \dfrac{1}{2} &amp; \dfrac{1}{2} \\<br>  \end{array} $$</p>
+</li>
+<li><p>因此类似单比特频数检测，由中心极限定理，有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{S_{n-k}}{\sqrt{n-k}} \leq x) = \phi(x) $$</p>
+</li>
+<li><p>可知此时观测的随机变量为$\dfrac{S_{n-k}}{\sqrt{n-k}}$，满足正态分布，因此可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|S_{n-k}|}{\sqrt{2(n-k)}}) $$</p>
+</li>
+</ul>
+<h2 id="自相关检测"><a href="#自相关检测" class="headerlink" title="自相关检测"></a>自相关检测</h2><ul>
+<li><p>类似二元推导检测，此时另$Y_{i} = \varepsilon_{i} \oplus \varepsilon_{i+d} $有</p>
+<p>  $$ \begin{array}<br>  \varepsilon_{i} &amp; \varepsilon_{i+d} &amp; \varepsilon_{i+2d} &amp; Y_{i} &amp; Y_{i+d} &amp; Y_{i}Y_{i+d} \\<br>  \hline 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\<br>  \hline 0 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 \\<br>  \hline 0 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 1 \\<br>  \hline 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 \\<br>  \hline 1 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\<br>  \hline 1 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\<br>  \hline 1 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\<br>  \hline 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\<br>  \end{array} $$</p>
+</li>
+<li><p>现证明$Y_{i}$与$Y_{i+d}$相互独立，$Y_{i}$与$Y_{i+d}$的协方差为</p>
+<p>  $$ Cov(Y_{i}, Y_{i+d}) = E(Y_{i}Y_{i+d}) - E(Y_{i})E(Y_{i+d}) $$</p>
+</li>
+<li><p>由表中数据计算可得，$E(Y_{i}Y_{i+d}) = \dfrac{1}{4}$，而$E(Y_{i}) = E(Y_{i+d}) = \dfrac{1}{2}$，因此$Cov(Y_{i}, Y_{i+d}) = \dfrac{1}{4} - \dfrac{1}{2} × \dfrac{1}{2} = 0 $，可证得$Y_{i}$与$Y_{i+d}$相互独立，从而$Y_{i}$满足独立同分布，且$Y_{i}$满足如下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  X_{i} &amp; 1 &amp; 0 \\<br>  \hline<br>  p &amp; \dfrac{1}{2} &amp; \dfrac{1}{2} \\<br>  \end{array} $$</p>
+</li>
+<li><p>因此由$De Moivre–Laplace$定理有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{2(A(d) - \dfrac{n-d}{2})}{\sqrt{n-d}} \leq x) = \phi(x) $$</p>
+</li>
+<li><p>可知$A(d)$满足期望$\mu = \dfrac{n-d}{2}$, 方差$\sigma^{2} = \dfrac{n-d}{4}$的正态分布，因此统计值</p>
+<p>  $$ V = \dfrac{2(A(d) - \dfrac{n-d}{2})}{\sqrt{n-d}} $$</p>
+</li>
+<li><p>满足正态分布，可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|V|}{\sqrt{2}}) $$</p>
+</li>
+</ul>
+<h2 id="矩阵秩检测"><a href="#矩阵秩检测" class="headerlink" title="矩阵秩检测"></a>矩阵秩检测</h2><ul>
+<li><p>此检测利用了皮尔森卡方检验，大小为32×32的矩阵，秩可分为三类，分别是32, 31, 小于31，且每个类别的子序列出现的概率由附录表格提供，观测数为N，记$F_{32}$，$F_{31}$分别为秩为32和31的矩阵的个数，因此以下统计量</p>
+<p>  $$ V = \dfrac{(F_{32} - 0.2888N)^{2}}{0.2888N} + \dfrac{(F_{31} - 0.5776N)^{2}}{0.5776N} + \dfrac{(N - F_{32} - F_{31} - 0.1336N)^{2}}{0.1336N} $$</p>
+</li>
+<li><p>由皮尔森卡方检验，V满足自由度为2的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(1,\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="累加和检测"><a href="#累加和检测" class="headerlink" title="累加和检测"></a>累加和检测</h2><ul>
+<li><p>根据$P$值的定义，有</p>
+<p>  $$ p-value = P(\max\limits_{1 \leq k \leq n}|S_{k}| \geq z) $$</p>
+</li>
+<li><p>根据Pal Revesz书中17页定理2.6的结论，可得到</p>
+<p>  $$ P(\max\limits_{1 \leq k \leq n}|S_{k}| \geq z) = 1 - \sum\limits_{k=-\infty}^{\infty}P((4k-1)z &lt; S_{n} &lt; (4k+1)z) + \sum\limits_{k=-\infty}^{\infty}P((4k+1)z &lt; S_{n} &lt; (4k+3)z) $$</p>
+</li>
+<li><p>与单比特频数检测中一致，统计值$V = \dfrac{S_{n}}{\sqrt{n}}$满足正态分布，且注意到$S_{n}$的范围是[$-n$, $n$]，因此有</p>
+<p>  $$ p-value = 1 - \sum\limits_{i=(-(n/z)+1)/4}^{((n/z)-1)/4}[\phi(\dfrac{(4i+1)z}{\sqrt{n}}) - \phi(\dfrac{(4i-1)z}{\sqrt{n}})] + \sum\limits_{i=(-(n/z)+1)/4}^{((n/z)-1)/4}[\phi(\dfrac{(4i+3)z}{\sqrt{n}}) - \phi(\dfrac{(4i+1)z}{\sqrt{n}})] $$</p>
+</li>
+</ul>
+<h2 id="近似熵检测"><a href="#近似熵检测" class="headerlink" title="近似熵检测"></a>近似熵检测</h2><ul>
+<li><p>此检测利用了A. Rukhin在2000年的论文中的一个结论，即统计值</p>
+<p>  $$ V = 2n[\log s - ApEn(m)] $$</p>
+</li>
+<li><p>V满足自由度为$(s-1)s^{m}$的卡方分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(\dfrac{(s-1)s^{m}}{2},\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="线性复杂度检测"><a href="#线性复杂度检测" class="headerlink" title="线性复杂度检测"></a>线性复杂度检测</h2><ul>
+<li><p>此检测利用了皮尔森卡方检验，统计值按照规范的算法可分为七类，且每个类别的子序列出现的概率由附录表格提供，观测数为N，因此以下统计量</p>
+<p>  $$ V = \sum\limits_{i=0}^{6} \dfrac{(v_{i}-N\pi_{i})^{2}}{N\pi_{i}} $$</p>
+</li>
+<li><p>由皮尔森卡方检验，V满足自由度为6的$\chi^{2}$分布，因此可利用上面$P$值与$igamc$的关系中的结论，得到</p>
+<p>  $$ p-value = igamc(3,\dfrac{V}{2}) $$</p>
+</li>
+</ul>
+<h2 id="Maurer通用统计检测"><a href="#Maurer通用统计检测" class="headerlink" title="Maurer通用统计检测"></a>Maurer通用统计检测</h2><ul>
+<li><p>令</p>
+<p>  $$ Y_{i} = \log_{2}(i - T_{j}) $$</p>
+<p>  $$ f_{n} = \dfrac{1}{K} \sum_{i = Q + 1}^{Q + K} \log_{2}(i - T_{j}) $$</p>
+</li>
+<li><p>其中$Y_{i} = \log_{2}G$中$G$满足参数为$1 - 2^{-L}$的几何分布。由于$Y_{i}$相互独立，则由中心极限定理，有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{1}{\sqrt{K} \sigma_{Y}}(Y_{1} + … + Y_{K} - KE(Y)) \leq x) = \phi(x) $$</p>
+</li>
+<li><p>即</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{\sqrt{K}}{\sigma_{Y}}(f_{n} - E(Y)) \leq x) = \phi(x) $$</p>
+</li>
+<li><p>此时可知统计值</p>
+<p>  $$ V = \dfrac{f_{n} - E(Y)}{\sigma} $$</p>
+</li>
+<li><p>V满足标准正态分布，且$\sigma$满足标准中给出的近似公式，因此可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|V|}{\sqrt{2}}) $$</p>
+</li>
+</ul>
+<h2 id="离散傅立叶检测"><a href="#离散傅立叶检测" class="headerlink" title="离散傅立叶检测"></a>离散傅立叶检测</h2><ul>
+<li><p>由于假设离散变量满足二项分布，小于门限值的概率为0.95，可令随机变量$Y_{i}$，当小于门限值时值为1，大于等于门限值时值为0，则满足以下分布</p>
+<p>  $$ \begin{array}{c|lcr}<br>  Y_{i} &amp; 1 &amp; 0 \\<br>  \hline<br>  p &amp; 0.95 &amp; 0.05 \\<br>  \end{array} $$</p>
+</li>
+<li><p>因此，可计算得到$E(Y_{i})=0.95$, $Var(Y_{i})=\dfrac{0.95×0.05}{2}$。由中心极限定理，有</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{N_{1} - N_{0}}{\sqrt{0.95 × 0.05 × n / 2}} \leq x) = \phi(x) $$</p>
+</li>
+<li><p>但是貌似和标准中结果不同。因为在Song-Ju Kim等人的论文中提到对该测试的修正，认为并不是独立的，应该是满足$\sigma^{2}=\dfrac{npq}{4}$，从而有了标准中的修正，即</p>
+<p>  $$ \lim\limits_{n \to \infty} P(\dfrac{N_{1} - N_{0}}{\sqrt{0.95 × 0.05 × n / 4}} \leq x) = \phi(x) $$</p>
+</li>
+<li><p>由于统计值</p>
+<p>  $$ V = \dfrac{N_{1} - N_{0}}{\sqrt{0.95 × 0.05 × n / 4}} $$</p>
+</li>
+<li><p>V满足标准正态分布，因此可利用上面$P$值与$erfc$的关系中的结论，得到</p>
+<p>  $$ p-value = erfc(\dfrac{|V|}{\sqrt{2}}) $$</p>
+</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>概率论与数理统计-陈希儒</li>
+<li><a href="https://en.wikipedia.org/wiki/Chi-squared_test#Pearson&#39;s_chi-squared_test" target="_blank" rel="external">皮尔森卡方检验-维基百科</a></li>
+<li><a href="https://en.wikipedia.org/wiki/P-value" target="_blank" rel="external">P值-维基百科</a></li>
+<li><a href="http://cxc.harvard.edu/sherpa/ahelp/igamc.html" target="_blank" rel="external">igamc</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Β函数" target="_blank" rel="external">B函数-维基百科</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-22r1a.pdf" target="_blank" rel="external">NIST-STS文档</a></li>
+<li>I. J. Good (1953). The serial test for sampling numbers and other tests for randomness.<br>Mathematical Proceedings of the Cambridge Philosophical Society, 49, pp 276-284 doi:10.1017/<br>S030500410002836X</li>
+<li>Rukhin A L. Approximate entropy for testing randomness[J]. Journal of Applied Probability, 2000, 37(1): 88-100.</li>
+<li>Kim S J, Umeno K, Hasegawa A. Corrections of the NIST statistical test suite for randomness[J]. arXiv preprint nlin/0401040, 2004.</li>
+<li>Révész P. Random walk in random and non-random environments[M]. 2005.</li>
+<li>Gibbons J D, Chakraborti S. Nonparametric statistical inference[M]//International encyclopedia of statistical science. Springer Berlin Heidelberg, 2011: 977-979.</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/29/记第一个被确认的漏洞/" rel="next" title="记第一个被确认的漏洞">
+                <i class="fa fa-chevron-left"></i> 记第一个被确认的漏洞
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="eipi10" />
+          <p class="site-author-name" itemprop="name">eipi10</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/eipi10ydz/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理论基础"><span class="nav-number">1.</span> <span class="nav-text">理论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#中心极限定理"><span class="nav-number">1.1.</span> <span class="nav-text">中心极限定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#De-Moivre–Laplace定理"><span class="nav-number">1.2.</span> <span class="nav-text">De Moivre–Laplace定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#皮尔森卡方检验"><span class="nav-number">1.3.</span> <span class="nav-text">皮尔森卡方检验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P值"><span class="nav-number">1.4.</span> <span class="nav-text">P值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P值与erfc-igamc等函数之间的关系"><span class="nav-number">1.5.</span> <span class="nav-text">P值与erfc, igamc等函数之间的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡方分布相加后的分布"><span class="nav-number">1.6.</span> <span class="nav-text">卡方分布相加后的分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15项检测"><span class="nav-number">2.</span> <span class="nav-text">15项检测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单比特频数检测"><span class="nav-number">2.1.</span> <span class="nav-text">单比特频数检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#块内频数检测"><span class="nav-number">2.2.</span> <span class="nav-text">块内频数检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扑克检测"><span class="nav-number">2.3.</span> <span class="nav-text">扑克检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重叠子序列检测"><span class="nav-number">2.4.</span> <span class="nav-text">重叠子序列检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#游程总数检测"><span class="nav-number">2.5.</span> <span class="nav-text">游程总数检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#游程分布检测"><span class="nav-number">2.6.</span> <span class="nav-text">游程分布检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#块内最大”1”游程检测"><span class="nav-number">2.7.</span> <span class="nav-text">块内最大”1”游程检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二元推导检测"><span class="nav-number">2.8.</span> <span class="nav-text">二元推导检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自相关检测"><span class="nav-number">2.9.</span> <span class="nav-text">自相关检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵秩检测"><span class="nav-number">2.10.</span> <span class="nav-text">矩阵秩检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#累加和检测"><span class="nav-number">2.11.</span> <span class="nav-text">累加和检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#近似熵检测"><span class="nav-number">2.12.</span> <span class="nav-text">近似熵检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线性复杂度检测"><span class="nav-number">2.13.</span> <span class="nav-text">线性复杂度检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Maurer通用统计检测"><span class="nav-number">2.14.</span> <span class="nav-text">Maurer通用统计检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#离散傅立叶检测"><span class="nav-number">2.15.</span> <span class="nav-text">离散傅立叶检测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">eipi10</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'eipi10';
+      var disqus_identifier = '2018/03/18/随机数检测规范中测试稍详细些的原理解释/';
+      var disqus_title = "随机数检测规范中测试稍详细些的原理解释";
+      var disqus_url = 'http://yoursite.com/2018/03/18/随机数检测规范中测试稍详细些的原理解释/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+</body>
+</html>
